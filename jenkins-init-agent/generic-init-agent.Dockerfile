@@ -1,2 +1,2 @@
-FROM alpine:3.20.3
-
+FROM python:3.9.20-slim
+COPY agent-init.py agent-init.py
