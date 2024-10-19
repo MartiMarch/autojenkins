@@ -1,0 +1,27 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: generic-init-agent
+  namespace: autojenkins
+spec:
+  template:
+    spec:
+      containers:
+        - name: generic-init-agent
+          image: srmmll/generic-init-agent:0.0.0
+          imagePullPolicy: Always
+          command: ["python3"]
+          args:
+            - "agent-init.py"
+          env:
+            - name: CLEAR_CACHE_PATHS
+              value: "{{ .Values.agent.init.cache.clear }}"
+          volumeMounts:
+            - name: agent-cache
+              mountPath: /opt
+      restartPolicy: Never
+      volumes:
+        - name: agent-cache
+          persistentVolumeClaim:
+            claimName: autojenkins-agent-cache
+  backoffLimit: 3

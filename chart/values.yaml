@@ -1,0 +1,548 @@
+agent:
+  init:
+    cache:
+      clear: "false"
+
+jenkins:
+  nameOverride: autojenkins
+  fullnameOverride: autojenkins
+  namespaceOverride: autojenkins
+
+  clusterZone: "cluster.local"
+  kubernetesURL: "https://kubernetes.default"
+  credentialsId:
+
+  controller:
+    componentName: "jenkins-controller"
+    image:
+      registry: "docker.io"
+      repository: "jenkins/jenkins"
+      tag:
+      tagLabel: jdk17
+      pullPolicy: "Always"
+    imagePullSecretName:
+    lifecycle: {}
+    disableRememberMe: false
+    numExecutors: 0
+    executorMode: "NORMAL"
+    customJenkinsLabels: []
+    hostNetworking: false
+
+    admin:
+      username: "admin"
+      password: "1234"
+      userKey: jenkins-admin-user
+      passwordKey: jenkins-admin-password
+      createSecret: true
+      existingSecret: ""
+
+    jenkinsAdminEmail: austakiocaca@gmail.com
+    jenkinsHome: "/var/jenkins_home"
+    jenkinsRef: "/usr/share/jenkins/ref"
+    jenkinsWar: "/usr/share/jenkins/jenkins.war"
+    jenkinsOpts:
+    jenkinsUrlProtocol:
+    jenkinsUrl:
+    jenkinsUriPrefix:
+
+    resources:
+      requests:
+        cpu: "50m"
+        memory: "256Mi"
+      limits:
+        cpu: "2000m"
+        memory: "4096Mi"
+
+    shareProcessNamespace: false
+    enableServiceLinks: false
+    initContainerResources: {}
+    initContainerEnvFrom: []
+    initContainerEnv: []
+    containerEnvFrom: []
+    containerEnv: []
+
+    javaOpts:
+      -Dorg.apache.commons.jelly.tags.fmt.timeZone=Europe/Madrid
+
+    usePodSecurityContext: true
+    runAsUser: 1000
+    fsGroup: 1000
+    securityContextCapabilities: {}
+    podSecurityContextOverride: ~
+    containerSecurityContext:
+      runAsUser: 1000
+      runAsGroup: 1000
+      readOnlyRootFilesystem: true
+      allowPrivilegeEscalation: false
+
+    serviceType: ClusterIP
+    clusterIp:
+    servicePort: 8080
+    targetPort: 8080
+    nodePort:
+    serviceExternalTrafficPolicy:
+    serviceAnnotations: {}
+    statefulSetLabels: {}
+    serviceLabels: {}
+    podLabels: {}
+    healthProbes: true
+    probes:
+      startupProbe:
+        failureThreshold: 12
+        httpGet:
+          path: '{{ default "" .Values.controller.jenkinsUriPrefix }}/login'
+          port: http
+        periodSeconds: 10
+        timeoutSeconds: 5
+      livenessProbe:
+        failureThreshold: 5
+        httpGet:
+          path: '{{ default "" .Values.controller.jenkinsUriPrefix }}/login'
+          port: http
+        periodSeconds: 10
+        timeoutSeconds: 5
+        initialDelaySeconds:
+      readinessProbe:
+        failureThreshold: 3
+        httpGet:
+          path: '{{ default "" .Values.controller.jenkinsUriPrefix }}/login'
+          port: http
+        periodSeconds: 10
+        timeoutSeconds: 5
+        initialDelaySeconds:
+    podDisruptionBudget:
+      enabled: false
+      apiVersion: "policy/v1beta1"
+      annotations: {}
+      labels: {}
+      maxUnavailable: "0"
+    agentListenerEnabled: true
+    agentListenerPort: 50000
+    agentListenerHostPort:
+    agentListenerNodePort:
+    agentListenerExternalTrafficPolicy:
+    agentListenerLoadBalancerSourceRanges:
+    - 0.0.0.0/0
+    disabledAgentProtocols:
+      - JNLP-connect
+      - JNLP2-connect
+    csrf:
+      defaultCrumbIssuer:
+        enabled: true
+        proxyCompatability: true
+    agentListenerServiceType: "ClusterIP"
+    agentListenerServiceAnnotations: {}
+    agentListenerLoadBalancerIP:
+    legacyRemotingSecurityEnabled: false
+    loadBalancerSourceRanges:
+    - 0.0.0.0/0
+    loadBalancerIP:
+    extraPorts:
+
+    installPlugins:
+      - kubernetes:4292.v11898cf8fa_66
+      - workflow-aggregator:600.vb_57cdd26fdd7
+      - git:5.5.2
+      - configuration-as-code:1850.va_a_8c31d3158b_
+      - ansicolor:1.0.5
+      - parameterized-trigger:806.vf6fff3e28c3e
+      - rebuild:332.va_1ee476d8f6d
+      - pipeline-groovy-lib:740.va_2701257fe8d
+
+    installLatestPlugins: true
+    installLatestSpecifiedPlugins: false
+    additionalPlugins: []
+    initializeOnce: false
+    overwritePlugins: false
+    overwritePluginsFromImage: true
+    projectNamingStrategy: standard
+    enableRawHtmlMarkupFormatter: false
+    markupFormatter: plainText
+    scriptApproval: []
+    initScripts: {}
+    initConfigMap:
+    existingSecret:
+    additionalExistingSecrets: []
+    additionalSecrets: []
+    secretClaims: []
+    cloudName: "kubernetes"
+    JCasC:
+      defaultConfig: true
+      overwriteConfiguration: false
+      configUrls: []
+      configScripts: {}
+      security:
+        apiToken:
+          creationOfLegacyTokenEnabled: false
+          tokenGenerationOnCreationEnabled: false
+          usageStatisticsEnabled: true
+      securityRealm: |-
+        local:
+          allowsSignup: false
+          enableCaptcha: false
+          users:
+          - id: "${chart-admin-username}"
+            name: "Jenkins Admin"
+            password: "${chart-admin-password}"
+      authorizationStrategy: |-
+        loggedInUsersCanDoAnything:
+          allowAnonymousRead: false
+      configMapAnnotations: {}
+    customInitContainers: []
+    sidecars:
+      configAutoReload:
+        enabled: true
+        image:
+          registry: docker.io
+          repository: kiwigrid/k8s-sidecar
+          tag: 1.28.0
+        imagePullPolicy: IfNotPresent
+        resources: {}
+        additionalVolumeMounts: []
+        logging:
+          configuration:
+            override: false
+            logLevel: INFO
+            formatter: JSON
+            logToConsole: true
+            logToFile: false
+            maxBytes: 1024
+            backupCount: 3
+        scheme: http
+        skipTlsVerify: false
+        reqRetryConnect: 10
+        sleepTime:
+        envFrom: []
+        env: {}
+        sshTcpPort: 1044
+        folder: "/var/jenkins_home/casc_configs"
+        containerSecurityContext:
+          readOnlyRootFilesystem: true
+          allowPrivilegeEscalation: false
+      additionalSidecarContainers: []
+    schedulerName: ""
+    nodeSelector: {}
+    tolerations: []
+    terminationGracePeriodSeconds:
+    terminationMessagePath:
+    terminationMessagePolicy:
+    affinity: {}
+    priorityClassName:
+    podAnnotations: {}
+    statefulSetAnnotations: {}
+    updateStrategy: {}
+    topologySpreadConstraints: {}
+    ingress:
+      enabled: false
+      paths: []
+      apiVersion: "extensions/v1beta1"
+      labels: {}
+      annotations: {}
+      path:
+      hostName:
+      resourceRootUrl:
+      tls: []
+    secondaryingress:
+      enabled: false
+      paths: []
+      apiVersion: "extensions/v1beta1"
+      labels: {}
+      annotations: {}
+      hostName:
+      tls:
+    backendconfig:
+      enabled: false
+      apiVersion: "extensions/v1beta1"
+      name:
+      labels: {}
+      annotations: {}
+      spec: {}
+    route:
+      enabled: false
+      labels: {}
+      annotations: {}
+      path:
+    hostAliases: []
+    prometheus:
+      enabled: false
+      serviceMonitorAdditionalLabels: {}
+      serviceMonitorNamespace:
+      scrapeInterval: 60s
+      scrapeEndpoint: /prometheus
+      alertingrules: []
+      alertingRulesAdditionalLabels: {}
+      prometheusRuleNamespace: ""
+      relabelings: []
+      metricRelabelings: []
+    googlePodMonitor:
+      enabled: false
+      scrapeInterval: 60s
+      scrapeEndpoint: /prometheus
+    testEnabled: true
+    httpsKeyStore:
+      enable: false
+      jenkinsHttpsJksSecretName: ""
+      jenkinsHttpsJksSecretKey: "jenkins-jks-file"
+      jenkinsHttpsJksPasswordSecretName: ""
+      jenkinsHttpsJksPasswordSecretKey: "https-jks-password"
+      disableSecretMount: false
+      httpPort: 8081
+      path: "/var/jenkins_keystore"
+      fileName: "keystore.jks"
+      password: "password"
+      jenkinsKeyStoreBase64Encoded:
+
+  agent:
+    enabled: true
+    defaultsProviderTemplate: "generic-agent"
+    useDefaultServiceAccount: true
+    serviceAccount:
+    jenkinsUrl:
+    jenkinsTunnel:
+    skipTlsVerify: true
+    usageRestricted: false
+    kubernetesConnectTimeout: 5
+    kubernetesReadTimeout: 15
+    maxRequestsPerHostStr: "32"
+    retentionTimeout: 5
+    waitForPodSec: 600
+    namespace: autojenkins
+    podLabels: {}
+    jnlpregistry:
+    image:
+      repository: "jenkins/inbound-agent"
+      tag: "3261.v9c670a_4748a_9-1"
+    workingDir: "/home/jenkins/agent"
+    nodeUsageMode: "NORMAL"
+    customJenkinsLabels: []
+    imagePullSecretName:
+    componentName: "jenkins-agent"
+    websocket: false
+    directConnection: false
+    privileged: false
+    runAsUser:
+    runAsGroup:
+    hostNetworking: false
+    resources:
+      requests:
+        cpu: "512m"
+        memory: "512Mi"
+      limits:
+        cpu: "2m"
+        memory: "1024Mi"
+    livenessProbe: {}
+    alwaysPullImage: true
+    restrictedPssSecurityContext: false
+    podRetention: "Never"
+    showRawYaml: true
+    volumes: []
+    workspaceVolume: {}
+    envVars: []
+    secretEnvVars: []
+    nodeSelector: {}
+    command:
+    args: "${computer.jnlpmac} ${computer.name}"
+    sideContainerName: "jnlp"
+    TTYEnabled: false
+    containerCap: 10
+    podName: "genric-agent"
+    garbageCollection:
+      enabled: false
+      namespaces: ""
+      timeout: 300
+    idleMinutes: 0
+    yamlTemplate: |-
+      apiVersion: v1
+      kind: Pod
+      spec:
+        tolerations:
+        - key: "key"
+          operator: "Equal"
+          value: "value"
+    yamlMergeStrategy: "merge"
+    inheritYamlMergeStrategy: false
+    connectTimeout: 100
+    annotations: {}
+    additionalContainers: []
+    disableDefaultAgent: false
+    podTemplates: {}
+  additionalAgents: {}
+  additionalClouds: {}
+  persistence:
+    enabled: true
+    existingClaim:
+    storageClass:
+    annotations: {}
+    labels: {}
+    accessMode: "ReadWriteOnce"
+    size: "8Gi"
+    dataSource: {}
+    subPath:
+    volumes: []
+    mounts: []
+  networkPolicy:
+    enabled: false
+    apiVersion: networking.k8s.io/v1
+    internalAgents:
+      allowed: true
+      podLabels: {}
+      namespaceLabels: {}
+    externalAgents:
+      ipCIDR:
+      except: []
+  rbac:
+    create: true
+    readSecrets: false
+    useOpenShiftNonRootSCC: false
+  serviceAccount:
+    create: true
+    name:
+    annotations: {}
+    extraLabels: {}
+    imagePullSecretName:
+  serviceAccountAgent:
+    create: false
+    name:
+    annotations: {}
+    extraLabels: {}
+    imagePullSecretName:
+  checkDeprecation: true
+  awsSecurityGroupPolicies:
+    enabled: false
+    policies:
+      - name: ""
+        securityGroupIds: []
+        podSelector: {}
+
+  renderHelmLabels: true
+  helmtest:
+    bats:
+      image:
+        registry: "docker.io"
+        repository: "bats/bats"
+        tag: "1.11.0"
+
+nexus:
+  statefulset:
+    enabled: false
+
+  deploymentStrategy: Recreate
+
+  image:
+    repository: sonatype/nexus3
+    tag: 3.64.0
+    pullPolicy: IfNotPresent
+  imagePullSecrets:
+
+  docker:
+    enabled: false
+  env:
+    - name: INSTALL4J_ADD_VM_PARAMS
+      value: |-
+        -Xms2703M -Xmx4703M
+        -XX:MaxDirectMemorySize=2703M
+        -XX:+UnlockExperimentalVMOptions
+        -XX:+UseCGroupMemoryLimitForHeap
+        -Djava.util.prefs.userRoot=/nexus-data/javaprefs
+    - name: NEXUS_SECURITY_RANDOMPASSWORD
+      value: "false"
+
+  properties:
+    override: false
+    data:
+      nexus.scripts.allowCreation: true
+
+  resources:
+    requests:
+      cpu: "500m"
+      memory: "100Mi"
+    limits:
+      cpu: "3000m"
+      memory: "5000Mi"
+
+  nexusPort: 8081
+  livenessProbe:
+    initialDelaySeconds: 30
+    periodSeconds: 30
+    failureThreshold: 6
+    timeoutSeconds: 10
+    path: /
+  readinessProbe:
+    initialDelaySeconds: 30
+    periodSeconds: 30
+    failureThreshold: 6
+    timeoutSeconds: 10
+    path: /
+  hostAliases: [ ]
+
+  securityContext:
+    runAsUser: 200
+    runAsGroup: 200
+    fsGroup: 200
+
+  podAnnotations: {}
+
+  nameOverride: ""
+  fullnameOverride: ""
+
+  deployment:
+    annotations: { }
+    initContainers:
+    postStart:
+      command:
+    preStart:
+      command:
+    terminationGracePeriodSeconds: 120
+    additionalContainers:
+    additionalVolumes:
+    additionalVolumeMounts:
+
+  ingress:
+    enabled: false
+    ingressClassName: nginx
+    annotations:
+      nginx.ingress.kubernetes.io/proxy-body-size: "0"
+    hostPath: /
+    hostRepo: repo.demo
+
+  service:
+    name: nexus3
+    enabled: true
+    labels: { }
+    annotations: { }
+    type: ClusterIP
+
+  route:
+    enabled: false
+    name: docker
+    portName: docker
+    labels:
+    annotations:
+
+  nexusProxyRoute:
+    enabled: false
+    labels:
+    annotations:
+
+  persistence:
+    enabled: false
+    accessMode: ReadWriteOnce
+    storageSize: 8Gi
+
+  tolerations: [ ]
+
+  config:
+    enabled: false
+    mountPath: /sonatype-nexus-conf
+    data: [ ]
+
+  secret:
+    enabled: false
+    mountPath: /etc/secret-volume
+    readOnly: true
+    data: [ ]
+
+  serviceAccount:
+    create: true
+    annotations: { }
+    name: ""
