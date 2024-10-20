@@ -1,8 +1,0 @@
-kind: Pod
-metadata:
-  name: geenric-agent
-  namespace: autojenkins
-spec:
-  containers:
-    - name: generic-agent
-      image:
