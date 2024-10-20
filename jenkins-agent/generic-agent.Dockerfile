@@ -9,6 +9,7 @@ RUN mkdir -p '/opt/cache/asdf/plugins'
 ENV ASDF_DIR='/opt/cache/asdf/.asdf'
 ENV ASDF_DATA_DIR='/opt/cache/asdf/plugins'
 ENV APK_CACHE_DIR='/opt/cache/apk'
+ENV JENKINS_CACHE='/opt/cache/jenkins'
 
 RUN apk add --no-cache bash
 

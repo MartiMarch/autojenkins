@@ -320,10 +320,10 @@ jenkins:
     hostNetworking: false
     resources:
       requests:
-        cpu: "512m"
-        memory: "512Mi"
+        cpu: "50m"
+        memory: "224Mi"
       limits:
-        cpu: "2m"
+        cpu: "1000m"
         memory: "1024Mi"
     livenessProbe: {}
     alwaysPullImage: true
@@ -340,7 +340,7 @@ jenkins:
     sideContainerName: "jnlp"
     TTYEnabled: false
     containerCap: 10
-    podName: "genric-agent"
+    podName: "generic-agent"
     garbageCollection:
       enabled: false
       namespaces: ""
@@ -349,11 +349,55 @@ jenkins:
     yamlTemplate: |-
       apiVersion: v1
       kind: Pod
+      metadata:
+        name: generic-agent
+        namespace: autojenkins
       spec:
-        tolerations:
-        - key: "key"
-          operator: "Equal"
-          value: "value"
+        initContainers:
+          - name: init-apk-db
+            image: srmmll/generic-agent:0.0.0
+            command: ["sh", "-c"]
+            env:
+              - name: CLEAR_CACHE_PATHS
+                value: "false"
+            args:
+              - |
+                if [[ $CLEAR_CACHE_PATHS == "yes" || $CLEAR_CACHE_PATHS == "true" ]]; then
+                  echo "Borrando contenido de los directorios de caché..."
+                  rm -rf /opt/cache/apk/*
+                  rm -rf /opt/cache/asdf/*
+                  rm -rf /opt/cache/asdf/plugins/*
+                else
+                  echo "No se borra el contenido de los directorios de caché."
+                fi
+                
+                mkdir -p /opt/cache/apk
+                mkdir -p /opt/cache/asdf
+                mkdir -p /opt/cache/jenkins
+                mkdir -p /opt/cache/asdf/plugins
+            volumeMounts:
+              - name: agent-cache
+                mountPath: /opt
+        containers:
+          - name: generic-agent
+            image: srmmll/generic-agent:0.0.0
+            imagePullPolicy: Always
+            command: ["bash", "-c"]
+            args: ["sleep 7000"]
+            volumeMounts:
+              - name: agent-cache
+                mountPath: /opt
+            resources:
+              requests:
+                memory: "64Mi"
+                cpu: "50m"
+              limits:
+                memory: "592Mi"
+                cpu: "250m"
+        volumes:
+          - name: agent-cache
+            persistentVolumeClaim:
+              claimName: autojenkins-agent-cache
     yamlMergeStrategy: "merge"
     inheritYamlMergeStrategy: false
     connectTimeout: 100
