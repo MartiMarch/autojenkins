@@ -8,6 +8,9 @@ dependencies:
   - name: jenkins
     version: 5.7.5
     repository: https://charts.jenkins.io
-  - name: nexus
-    version: 1.2.4
-    repository: https://curie-data-factory.github.io/helm-charts/
+  #- name: nexus
+  #  version: 1.2.4
+  #  repository: https://curie-data-factory.github.io/helm-charts/
+  - name: gitea
+    version: 10.5.0
+    repository: https://dl.gitea.com/charts/

@@ -143,6 +143,8 @@ jenkins:
       - parameterized-trigger:806.vf6fff3e28c3e
       - rebuild:332.va_1ee476d8f6d
       - pipeline-groovy-lib:740.va_2701257fe8d
+      - github:1.40.0
+      - gitea:220.v4618c82a_40fb_
 
     installLatestPlugins: true
     installLatestSpecifiedPlugins: false
@@ -461,127 +463,36 @@ jenkins:
         repository: "bats/bats"
         tag: "1.11.0"
 
-nexus:
-  statefulset:
-    enabled: false
-
-  deploymentStrategy: Recreate
-
-  image:
-    repository: sonatype/nexus3
-    tag: 3.64.0
-    pullPolicy: IfNotPresent
-  imagePullSecrets:
-
-  docker:
-    enabled: false
-  env:
-    - name: INSTALL4J_ADD_VM_PARAMS
-      value: |-
-        -Xms2703M -Xmx4703M
-        -XX:MaxDirectMemorySize=2703M
-        -XX:+UnlockExperimentalVMOptions
-        -XX:+UseCGroupMemoryLimitForHeap
-        -Djava.util.prefs.userRoot=/nexus-data/javaprefs
-    - name: NEXUS_SECURITY_RANDOMPASSWORD
-      value: "false"
-
-  properties:
-    override: false
-    data:
-      nexus.scripts.allowCreation: true
-
+gitea:
+  namespace: "autojenkins"
   resources:
-    requests:
-      cpu: "500m"
-      memory: "100Mi"
     limits:
-      cpu: "3000m"
-      memory: "5000Mi"
-
-  nexusPort: 8081
-  livenessProbe:
-    initialDelaySeconds: 30
-    periodSeconds: 30
-    failureThreshold: 6
-    timeoutSeconds: 10
-    path: /
-  readinessProbe:
-    initialDelaySeconds: 30
-    periodSeconds: 30
-    failureThreshold: 6
-    timeoutSeconds: 10
-    path: /
-  hostAliases: [ ]
-
-  securityContext:
-    runAsUser: 200
-    runAsGroup: 200
-    fsGroup: 200
-
-  podAnnotations: {}
-
-  nameOverride: ""
-  fullnameOverride: ""
-
-  deployment:
-    annotations: { }
-    initContainers:
-    postStart:
-      command:
-    preStart:
-      command:
-    terminationGracePeriodSeconds: 120
-    additionalContainers:
-    additionalVolumes:
-    additionalVolumeMounts:
-
-  ingress:
+      cpu: 100m
+      memory: 128Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+  gitea:
+    admin:
+      username: gitea
+      password: 12345678abc
+      email: "austakiocaca@gmail.com"
+  redis-cluster:
     enabled: false
-    ingressClassName: nginx
-    annotations:
-      nginx.ingress.kubernetes.io/proxy-body-size: "0"
-    hostPath: /
-    hostRepo: repo.demo
-
-  service:
-    name: nexus3
+  postgresql-ha:
+    enabled: false
+  postgresql:
     enabled: true
-    labels: { }
-    annotations: { }
-    type: ClusterIP
-
-  route:
-    enabled: false
-    name: docker
-    portName: docker
-    labels:
-    annotations:
-
-  nexusProxyRoute:
-    enabled: false
-    labels:
-    annotations:
-
+    global:
+      postgresql:
+        auth:
+          username: gitea
+          password: gitea
+          database: gitea
   persistence:
-    enabled: false
-    accessMode: ReadWriteOnce
-    storageSize: 8Gi
-
-  tolerations: [ ]
-
+    storageClass: standard
+    annotations: {}
   config:
-    enabled: false
-    mountPath: /sonatype-nexus-conf
-    data: [ ]
-
-  secret:
-    enabled: false
-    mountPath: /etc/secret-volume
-    readOnly: true
-    data: [ ]
-
-  serviceAccount:
-    create: true
-    annotations: { }
-    name: ""
+    # https://docs.gitea.com/administration/config-cheat-sheet#database-database
+    database:
+      HOST: autojenkins-postgresql.autojenkins.svc.cluster.local
