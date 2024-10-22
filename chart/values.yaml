@@ -163,10 +163,11 @@ jenkins:
     additionalSecrets: []
     secretClaims: []
     cloudName: "kubernetes"
+
     JCasC:
       defaultConfig: true
       overwriteConfiguration: false
-      configUrls: []
+      configUrls: ['https://github.com/MartiMarch/autojenkins.git']
       configScripts: {}
       security:
         apiToken:
@@ -185,6 +186,7 @@ jenkins:
         loggedInUsersCanDoAnything:
           allowAnonymousRead: false
       configMapAnnotations: {}
+
     customInitContainers: []
     sidecars:
       configAutoReload:
