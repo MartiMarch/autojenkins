@@ -138,6 +138,7 @@ jenkins:
       - kubernetes:4292.v11898cf8fa_66
       - workflow-aggregator:600.vb_57cdd26fdd7
       - git:5.5.2
+      - remote-file:1.24
       - configuration-as-code:1850.va_a_8c31d3158b_
       - ansicolor:1.0.5
       - parameterized-trigger:806.vf6fff3e28c3e
@@ -167,7 +168,7 @@ jenkins:
     JCasC:
       defaultConfig: true
       overwriteConfiguration: false
-      configUrls: ['https://github.com/MartiMarch/autojenkins.git']
+      configUrls: ['https://raw.githubusercontent.com/MartiMarch/autojenkins/refs/heads/feat/helm_chart/jcasc/config.yaml']
       configScripts: {}
       security:
         apiToken:
