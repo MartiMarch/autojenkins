@@ -167,7 +167,7 @@ jenkins:
 
     JCasC:
       defaultConfig: true
-      overwriteConfiguration: false
+      overwriteConfiguration: true
       configUrls: ['https://raw.githubusercontent.com/MartiMarch/autojenkins/refs/heads/feat/helm_chart/jcasc/config.yaml']
       configScripts: {}
       security:
