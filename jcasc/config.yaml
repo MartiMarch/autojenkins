@@ -1,6 +1,0 @@
-jenkins:
-  giteaServers:
-    servers:
-      - displayName: "Gitea"
-        manageHooks: false
-        serverUrl: "http://autojenkins-gitea-http.autojenkins.svc.cluster.local:3000"
