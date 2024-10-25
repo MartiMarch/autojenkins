@@ -1,3 +1,11 @@
+credentials:
+  system:
+    domainCredentials:
+      - credentials:
+          - giteaAccessToken:
+              id: "TOKEN-GITEA"
+              scope: GLOBAL
+              token: "{AQAAABAAAAAwYrfjlY4+mSRpkuPU6gHIMBOEG+p9XRHOJa2SOY7CxHs+AJntC8isv2IkIJKKjgdB5gHri8HMwDU3V8J4XmLqnw==}"
 jenkins:
   agentProtocols:
     - "JNLP4-connect"
@@ -246,8 +254,9 @@ unclassified:
     hookUrl: "http://autojenkins:8080/github-webhook/"
   giteaServers:
     servers:
-      - displayName: "Gitea"
-        manageHooks: false
+      - credentialsId: "TOKEN-GITEA"
+        displayName: "Gitea"
+        manageHooks: true
         serverUrl: "http://autojenkins-gitea-http.autojenkins.svc.cluster.local:3000"
   junitTestResultStorage:
     storage: "file"
