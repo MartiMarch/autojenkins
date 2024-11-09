@@ -1,4 +1,4 @@
-package shell.po
+package org.cicdcli.shell.po
 
 class ShellOutput {
     String output

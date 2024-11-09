@@ -1,6 +1,6 @@
-package shell
+package org.cicdcli.shell
 
-import org.cicdcli._helpers.po.ShellOutput
+import org.cicdcli.shell.po.ShellOutput
 
 
 class Shell {
@@ -10,9 +10,9 @@ class Shell {
         int exitCode = shell.waitFor()
 
         return new ShellOutput(
-                output: shell.in.text,
-                error: shell.err.text,
-                isError: exitCode != 0
+            output: shell.in.text,
+            error: shell.err.text,
+            isError: exitCode != 0
         )
     }
 

@@ -1,6 +1,6 @@
-package shell
+package org.cicdcli.shell
 
-import org.cicdcli._helpers.po.ShellOutput
+import org.cicdcli.shell.po.ShellOutput
 import org.cicdcli.logger.Logger
 import picocli.CommandLine.Parameters
 import picocli.CommandLine.Command
@@ -9,6 +9,7 @@ import picocli.CommandLine.Command
 @Command(
     name = "shell",
     description = "Interact with linux shell",
+    mixinStandardHelpOptions = true,
     subcommands = [Exec]
 )
 class ShellCli implements Runnable {
@@ -32,7 +33,7 @@ class ShellCli implements Runnable {
                 Logger.error(so.error)
                 throw new Exception(so.error)
             } else {
-                
+                Logger.info(so.output)
             }
         }
     }
