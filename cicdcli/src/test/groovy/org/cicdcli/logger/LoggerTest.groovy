@@ -3,17 +3,15 @@ package org.cicdcli.logger
 import spock.lang.Specification
 import spock.lang.Unroll
 
-"""
+
 class LoggerTest extends Specification {
 
-    
-    LoggerConf conf = Mock()
-
     @Unroll
-    def '#logLevel function must print information with label and ANSI #logLevel log level' (){
+    def '#logLevel function must print information with label and ANSI #logLevel log level'() {
         given:
+        GroovyMock(LoggerConf, global: true)
+        LoggerConf.logLevel() >> 3
         def (shelLogs, originalShellLogs) = capturedLogs()
-        conf.logLevel() >> 3
 
         when:
         Logger."${logLevel}"(inputMessage)
@@ -33,6 +31,87 @@ class LoggerTest extends Specification {
         'error'   | 'Error fake message'   | '\033[31mError fake message\n'
     }
 
+    @Unroll
+    def 'debug must print the message because LoggerConf.logLevel() is higher or equal than #logLevel'() {
+        given:
+        GroovyMock(LoggerConf, global: true)
+        LoggerConf.logLevel() >> logLevel
+        def (shelLogs, originalShellLogs) = capturedLogs()
+
+        when:
+        Logger.debug('Debug message')
+
+        then:
+        shelLogs.toString('UTF-8') == '\033[35mDebug message\n'
+
+        cleanup:
+        System.setOut(originalShellLogs)
+
+        where:
+        logLevel << [1, 20, 2]
+    }
+
+    @Unroll
+    def "debug musn't print the message because LoggerConf.logLevel() is higher or equal than #logLevel"() {
+        given:
+        GroovyMock(LoggerConf, global: true)
+        LoggerConf.logLevel() >> logLevel
+        def (shelLogs, originalShellLogs) = capturedLogs()
+
+        when:
+        Logger.debug('Debug message')
+
+        then:
+        !shelLogs.toString('UTF-8').contains('\033[35mDebug message\n')
+
+        cleanup:
+        System.setOut(originalShellLogs)
+
+        where:
+        logLevel << [0, null, -30]
+    }
+
+    @Unroll
+    def 'core must print the message because LoggerConf.logLevel() is higher or equal than #logLevel'() {
+        given:
+        GroovyMock(LoggerConf, global: true)
+        LoggerConf.logLevel() >> logLevel
+        def (shelLogs, originalShellLogs) = capturedLogs()
+
+        when:
+        Logger.core('Core message')
+
+        then:
+        shelLogs.toString('UTF-8') == '\033[32mCore message\n'
+
+        cleanup:
+        System.setOut(originalShellLogs)
+
+        where:
+        logLevel << [2, 20, 1000]
+    }
+
+    @Unroll
+    def "core musn't print the message because LoggerConf.logLevel() is higher or equal than #logLevel"() {
+        given:
+        GroovyMock(LoggerConf, global: true)
+        LoggerConf.logLevel() >> logLevel
+        def (shelLogs, originalShellLogs) = capturedLogs()
+
+        when:
+        Logger.core('Core message')
+
+        then:
+        !shelLogs.toString('UTF-8').contains('\033[35mCore message\n')
+
+        cleanup:
+        System.setOut(originalShellLogs)
+
+        where:
+        logLevel << [0, 1, -2]
+    }
+
+
     Tuple2<ByteArrayOutputStream, PrintStream> capturedLogs() {
         ByteArrayOutputStream shellLogs = new ByteArrayOutputStream()
         PrintStream originalShellLogs = System.out
@@ -41,4 +120,3 @@ class LoggerTest extends Specification {
         return new Tuple2<>(shellLogs, originalShellLogs)
     }
 }
-"""

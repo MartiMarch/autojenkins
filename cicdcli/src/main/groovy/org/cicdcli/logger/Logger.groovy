@@ -1,6 +1,7 @@
 package org.cicdcli.logger
 
 class Logger {
+
     static private Map<String, String> ANSI_COLORS = [
         yellow: '\033[33m',
         blue: '\033[34m',
