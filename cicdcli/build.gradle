@@ -1,6 +1,7 @@
 plugins {
     id 'groovy'
     id 'application'
+    id 'maven-publish'
     id 'com.github.johnrengelman.shadow' version '7.1.2'
 }
 
@@ -14,6 +15,25 @@ repositories {
 shadowJar {
     manifest {
         attributes 'Main-Class': application.mainClass
+    }
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+    repositories {
+        maven {
+            name = "nexus"
+            allowInsecureProtocol = true
+            url = uri("http://localhost:3333/repository/autojenkins/")
+            credentials {
+                username = "admin"
+                password = "1234"
+            }
+        }
     }
 }
 
