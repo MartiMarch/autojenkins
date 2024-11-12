@@ -10,6 +10,7 @@ pipeline {
             steps {
                 container('generic-agent') {
                     sh 'echo "Hello World"'
+                    sh 'sleep 99999'
                 }
             }
         }

@@ -11,7 +11,7 @@ docker login -u srmmll # Use token
 # Push
 docker tag generic-agent:0.0.0 srmmll/generic-agent:0.0.0
 docker push srmmll/generic-agent:0.0.0
-
+ bash
 # Pull
 docker pull srmmll/generic-agent:0.0.0
 ```
@@ -32,7 +32,7 @@ apk add --allow-untrusted --no-cache ${apk file path}
 ```
 
 También evitará cargar lo especificado en el yml de configuración utilizando la lista de lo escaneado.
-```
+``` bash
 apk info -q
 ```
 
