@@ -378,6 +378,7 @@ jenkins:
                   rm -rf /opt/cache/apk/*
                   rm -rf /opt/cache/asdf/*
                   rm -rf /opt/cache/asdf/plugins/*
+                  rm -rf /opt/cache/cicdcli/*
                 else
                   echo "No se borra el contenido de los directorios de caché."
                 fi
@@ -386,6 +387,11 @@ jenkins:
                 mkdir -p /opt/cache/asdf
                 mkdir -p /opt/cache/jenkins
                 mkdir -p /opt/cache/asdf/plugins
+                mkdir -p /opt/cache/cicdcli
+
+                apk add curl
+                sleep 9999
+
             volumeMounts:
               - name: agent-cache
                 mountPath: /opt
@@ -731,9 +737,20 @@ gitea:
       tag: latest
   extraDeploy: []
 
+nexus:
+  statefulset:
+    enabled: true
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "100Mi"
+    limits:
+      cpu: "2000m"
+      memory: "4000Mi"
+
 ###################
 # Si falla el port.forward, meterse en el pod y cambiar permisos de archivos en este path:
 # /data/git/gitea-repositories
 #
 # También mirar los recursos
-####
+###################
