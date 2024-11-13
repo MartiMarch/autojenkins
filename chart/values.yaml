@@ -389,9 +389,6 @@ jenkins:
                 mkdir -p /opt/cache/asdf/plugins
                 mkdir -p /opt/cache/cicdcli
 
-                apk add curl
-                sleep 9999
-
             volumeMounts:
               - name: agent-cache
                 mountPath: /opt

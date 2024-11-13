@@ -26,6 +26,8 @@ spec:
           mkdir -p /opt/cache/asdf
           mkdir -p /opt/cache/jenkins
           mkdir -p /opt/cache/asdf/plugins
+          mkdir -p /opt/cache/cicdcli
+
       volumeMounts:
         - name: agent-cache
           mountPath: /opt

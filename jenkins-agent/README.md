@@ -1,6 +1,6 @@
 # Local compilation
 ```
-docker build --platform=linux/amd64 -t generic-agent:0.0.0 -f generic-agent.Dockerfile .
+docker build --platform=linux/amd64 -t srmll/generic-agent:0.0.0 -f generic-agent.Dockerfile .
 ```
 
 # DockerHub
@@ -63,3 +63,25 @@ Tdo este contendio he de agregarlo a la libraria, concretamente la parte de asdf
 # Para reconciliar lo cahceado con el pod
 # apk update --cache-dir $APK_CACHE_DIR
 ```
+
+#h2 IMPORTANTE
+
+Para alcanzar el localhost del anftrión desde un contenedro es necesario usar el flag '--network host'
+
+```bash
+docker run --network host -it srmmll/generic-agent:0.0.0 bash
+```
+
+#h2 CARGAR/LIMPIAR CACHE
+
+```bash
+export CLEAR_CACHE_PATHS='yes'
+```
+
+#h2 CARGAR/LIMPIAR CACHE
+
+Revisar binarios requeridos por los plugins de asdf:
+```bash
+ldd /opt/cache/asdf/.asdf/installs/java/openjdk-21.0.2/bin/java
+```
+
