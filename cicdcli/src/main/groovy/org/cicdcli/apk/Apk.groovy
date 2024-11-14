@@ -8,27 +8,23 @@ import org.cicdcli.shell.Shell
 
 class Apk {
 
-    static private boolean isPackageInstalled(String searchedPackageName) {
-        updateCache()
-        return listPackages().containsKey(searchedPackageName)
-    }
-
-    static private Map<String, ApkPackage> listPackages() {
+    static Map<String, ApkPackage> listPackages() {
         Map<String, ApkPackage> pacakges = [:]
+        List<String> lines
         ShellOutput so
-        String lines
 
-        so = Shell.exec("apk list --installed --cache-dir \$APK_CACHE_DIR")
+        so = Shell.exec('apk list --installed --cache-dir $PATH_APK_CACHE')
         checkShellError(so)
 
-        lines = so.output.tokenize('\n')
-        lines.each{ String line ->
-            List<String> lineTokens = line.tokenize(' ')
-            if(lineTokens.size() == 4){
-                String packageName = lineTokens[2].substring(1, lineTokens[2].size()-1)
+        lines = so.output.readLines()
+        lines.each { String line ->
+            List<String> lineTokens = line.replaceAll('[\\[\\]{}]', '').split(' ')
+
+            if(lineTokens.size() == 5) {
+                String packageName = lineTokens[2]
                 String packageOrg = lineTokens[3].substring(1, lineTokens[3].size()-1)
 
-                if(!pacakges.containsKey(packageName)){
+                if(!pacakges.containsKey(packageName)) {
                     pacakges[packageName] = new ApkPackage(
                         name: packageName,
                         version: getPackageVersion(packageName),
@@ -43,12 +39,7 @@ class Apk {
         return pacakges
     }
 
-    static private updateCache() {
-        ShellOutput so = Shell.exec("apk update --cache-dir \$APK_CACHE_DIR")
-        checkShellError(so)
-    }
-
-    static private String getPackageVersion(String packageName) {
+    static String getPackageVersion(String packageName) {
         String versionLineRegex = ~/^.*=.*/
         String version = 'unknown'
         List<String> lines
@@ -67,35 +58,29 @@ class Apk {
         return version
     }
 
-    static private addPackage(String packageName, String packageVersion = '') {
+    static addPackage(String packageName, String packageVersion = '') {
         ShellOutput so
 
-        if(isPackageInstalled(packageName)) {
-            Logger.info("Apk addition avoid because exists in cache")
-        } else {
-            if (packageVersion.isEmpty()) {
-                so = Shell.exec("apk add --cache-dir \$APK_CACHE_DIR ${packageName}=${packageVersion}")
-            } else {
-                so = Shell.exec("apk add --cache-dir \$APK_CACHE_DIR ${packageName}")
-            }
+        if (packageVersion.isEmpty()) {
+            so = Shell.exec("apk add --cache-dir \$PATH_APK_CACHE ${packageName}")
             checkShellError(so)
-            Logger.info("Apk package ${packageName} ${packageVersion} added")
+            Logger.info("Apk package ${packageName} added")
+        } else {
+            so = Shell.exec("apk add --cache-dir \$PATH_APK_CACHE ${packageName}=${packageVersion}")
+            checkShellError(so)
+            Logger.info("Apk package ${packageName}=${packageVersion} added")
         }
     }
 
-    static private deletePackage(String packageName) {
+    static deletePackage(String packageName) {
         ShellOutput so
 
-        if(isPackageInstalled(packageName)){
-            so = Shell.exec("apk del ${packageName}")
-            checkShellError(so)
-        } else {
-            Logger.warning("Can't delete Apk package ${packageName} because it wasn¡t installed previously")
-        }
+        so = Shell.exec("apk del --cache-dir \$PATH_APK_CACHE ${packageName}")
+        checkShellError(so)
     }
 
     static private void checkShellError(ShellOutput so) {
-        if(so.isError){
+        if(so.isError) {
             Logger.error(so.error)
             throw new Exception(so.error)
         }

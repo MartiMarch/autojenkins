@@ -1,11 +1,12 @@
 package org.cicdcli
 
-import org.cicdcli.apk.ApkCli
-import picocli.CommandLine.Command
-import picocli.CommandLine
-import org.cicdcli.logger.LoggerCli
-import org.cicdcli.shell.ShellCli
 import org.cicdcli.git.GitCli
+import org.cicdcli.apk.ApkCli
+import org.cicdcli.asdf.AsdfCli
+import org.cicdcli.shell.ShellCli
+import org.cicdcli.logger.LoggerCli
+import picocli.CommandLine
+import picocli.CommandLine.Command
 
 
 @Command(
@@ -13,7 +14,7 @@ import org.cicdcli.git.GitCli
     mixinStandardHelpOptions = true,
     version = "0.0.0",
     description = "CLI para orquestar el CI y el CD",
-    subcommands = [GitCli, ShellCli, LoggerCli, ApkCli]
+    subcommands = [GitCli, ShellCli, LoggerCli, ApkCli, AsdfCli]
 )
 class CLI implements Runnable {
 

@@ -14,6 +14,7 @@ class LoggerCli implements Runnable {
 
     @Command(
         name = "info",
+        mixinStandardHelpOptions = true,
         description = "Prints text wit info logger"
     )
     static class Info implements Runnable {
@@ -32,6 +33,7 @@ class LoggerCli implements Runnable {
 
     @Command(
         name = "error",
+        mixinStandardHelpOptions = true,
         description = "Prints text wit error logger"
     )
     static class Error implements Runnable {
@@ -50,6 +52,7 @@ class LoggerCli implements Runnable {
 
     @Command(
         name = "debug",
+        mixinStandardHelpOptions = true,
         description = "Prints text wit debug logger"
     )
     static class Debug implements Runnable {
@@ -68,6 +71,7 @@ class LoggerCli implements Runnable {
 
     @Command(
         name = "warning",
+        mixinStandardHelpOptions = true,
         description = "Prints text wit debug logger"
     )
     static class Warning implements Runnable {
@@ -86,6 +90,7 @@ class LoggerCli implements Runnable {
 
     @Command(
         name = "core",
+        mixinStandardHelpOptions = true,
         description = "Prints text wit debug logger"
     )
     static class Core implements Runnable {

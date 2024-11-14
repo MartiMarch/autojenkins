@@ -13,6 +13,7 @@ class GitCli implements Runnable {
 
     @Command(
         name = "version",
+        mixinStandardHelpOptions = true,
         description = "Return git version"
     )
     static class Version implements Runnable {

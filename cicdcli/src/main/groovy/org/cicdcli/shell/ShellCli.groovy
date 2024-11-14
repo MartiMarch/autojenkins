@@ -16,6 +16,7 @@ class ShellCli implements Runnable {
 
     @Command(
         name = "exec",
+        mixinStandardHelpOptions = true,
         description = "Executes desired Linux command"
     )
     static class Exec implements Runnable {
