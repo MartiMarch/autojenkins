@@ -22,20 +22,17 @@ if [[ $CLEAR_CACHE_PATHS == "yes" || $CLEAR_CACHE_PATHS == "true" ]]; then
     apk add --cache-dir $PATH_APK_CACHE zlib-dev
     apk add --cache-dir $PATH_APK_CACHE xz-dev
     apk add --cache-dir $PATH_APK_CACHE openjdk21-jre
+    apk add --cache-dir $PATH_APK_CACHE libc6-compat
     apk cache clean
 
     echo "Instalando asdf..."
     git clone https://github.com/asdf-vm/asdf.git $PATH_ASDF_CACHE/.asdf --branch v0.14.1
     echo -e '\n. $PATH_ASDF_CACHE/.asdf/asdf.sh' >> ~/.bashrc
     echo -e '\n. $PATH_ASDF_CACHE/.asdf/completions/asdf.bash' >> ~/.bashrc
-    # TODO(marti): abreviautra para usar el cicdcli directamente
-    #echo -e '\n. $PATH_CICDCLI_CACHE/cicdcli.jar' >> ~/.bashrc
-    #source ~/.bashrc
+    echo -e '\nalias cicdcli="java -jar $PATH_CICDCLI_CACHE/cicdcli.jar"' >> ~/.bashrc
+    source ~/.bashrc
 
     echo "Instalando CLI de CICD en cache"
-    #asdf plugin add java
-    #asdf install java openjdk-21.0.2
-    #asdf global java openjdk-21.0.2
     curl -u $NEXUS_USER:$NEXUS_PASSWORD "$NEXUS_HTTP_PROTOCOL://$NEXUS_DOMAIN:$NEXUS_PORT/repository/$NEXUS_MVN_REPOSITORY/$NEXUS_MVN_CICDCLI_JAR_SUBPATH" -o $PATH_CICDCLI_CACHE/cicdcli.jar
 
 else
