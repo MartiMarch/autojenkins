@@ -18,4 +18,26 @@ class Git {
         }
     }
 
+    static void clone(String repository, String repositoryPath = ''){
+        ShellOutput so
+
+        if(repositoryPath.isEmpty()){
+            so = Shell.exec("git clone ${repository}")
+            checkShellError(so)
+
+            Logger.info("Repository ${repositoryPath} cloned")
+        } else {
+            so = Shell.exec("git clone ${repository} ${repositoryPath}")
+            checkShellError(so)
+
+            Logger.info("Repository ${repositoryPath} cloned in ${repositoryPath} path")
+        }
+    }
+
+    static private void checkShellError(ShellOutput so) {
+        if(so.isError) {
+            Logger.error(so.error)
+            throw new Exception(so.error)
+        }
+    }
 }
