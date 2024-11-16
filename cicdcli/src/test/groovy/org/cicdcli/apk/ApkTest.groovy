@@ -33,7 +33,9 @@ class ApkTest extends Specification {
 
         String packageName = 'fake-package-name'
         String errorMsg = 'fake error'
-        Logger.error(errorMsg) >> {}
+        Shell.checkShellError(_) >> {
+            throw new Exception(errorMsg)
+        }
         Shell.exec("apk version ${packageName}") >> new ShellOutput(
             output: 'this shell output no matters',
             error: errorMsg,

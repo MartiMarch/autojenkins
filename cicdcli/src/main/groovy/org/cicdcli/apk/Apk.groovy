@@ -14,7 +14,7 @@ class Apk {
         ShellOutput so
 
         so = Shell.exec('apk list --installed --cache-dir $PATH_APK_CACHE')
-        checkShellError(so)
+        Shell.checkShellError(so)
 
         lines = so.output.readLines()
         lines.each { String line ->
@@ -43,10 +43,9 @@ class Apk {
         String versionLineRegex = ~/^.*=.*/
         String version = 'unknown'
         List<String> lines
-        ShellOutput so
 
-        so = Shell.exec("apk version ${packageName}")
-        checkShellError(so)
+        ShellOutput so = Shell.exec("apk version ${packageName}")
+        Shell.checkShellError(so)
 
         lines = so.output.tokenize('\n')
         lines.each { String line ->
@@ -59,30 +58,19 @@ class Apk {
     }
 
     static addPackage(String packageName, String packageVersion = '') {
-        ShellOutput so
-
-        if (packageVersion.isEmpty()) {
-            so = Shell.exec("apk add --cache-dir \$PATH_APK_CACHE ${packageName}")
-            checkShellError(so)
+        if(packageVersion.isEmpty()) {
+            ShellOutput so = Shell.exec("apk add --cache-dir \$PATH_APK_CACHE ${packageName}")
+            Shell.checkShellError(so)
             Logger.info("Apk package ${packageName} added")
         } else {
-            so = Shell.exec("apk add --cache-dir \$PATH_APK_CACHE ${packageName}=${packageVersion}")
-            checkShellError(so)
+            ShellOutput so = Shell.exec("apk add --cache-dir \$PATH_APK_CACHE ${packageName}=${packageVersion}")
+            Shell.checkShellError(so)
             Logger.info("Apk package ${packageName}=${packageVersion} added")
         }
     }
 
     static deletePackage(String packageName) {
-        ShellOutput so
-
-        so = Shell.exec("apk del --cache-dir \$PATH_APK_CACHE ${packageName}")
-        checkShellError(so)
-    }
-
-    static private void checkShellError(ShellOutput so) {
-        if(so.isError) {
-            Logger.error(so.error)
-            throw new Exception(so.error)
-        }
+        ShellOutput so = Shell.exec("apk del --cache-dir \$PATH_APK_CACHE ${packageName}")
+        Shell.checkShellError(so)
     }
 }

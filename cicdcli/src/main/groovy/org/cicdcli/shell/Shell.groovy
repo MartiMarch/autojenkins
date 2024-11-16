@@ -1,5 +1,6 @@
 package org.cicdcli.shell
 
+import org.cicdcli.logger.Logger
 import org.cicdcli.shell.po.ShellOutput
 
 
@@ -16,4 +17,10 @@ class Shell {
         )
     }
 
+    static void checkShellError(ShellOutput so) {
+        if(so.isError) {
+            Logger.error(so.error)
+            throw new Exception(so.error)
+        }
+    }
 }
