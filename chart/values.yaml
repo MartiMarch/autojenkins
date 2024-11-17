@@ -368,15 +368,9 @@ jenkins:
           - name: generic-agent
             image: srmmll/generic-agent:0.0.0
             imagePullPolicy: Always
-            command: ["bash", "-c"]
-            args: ["sleep 9000"]
             envs:
               - name: CLEAR_CACHE_PATHS
-                value: "false"
-              - name: NEXUS_DOMAIN
-                value: "autojenkins-nexus.autojenkins.svc.cluster.local"
-              - name: NEXUS_PORT
-                value: "8081"
+                value: "true"
             volumeMounts:
               - name: agent-cache
                 mountPath: /opt

@@ -9,6 +9,7 @@ pipeline {
         stage('Pìpeline') {
             steps {
                 container('generic-agent') {
+                    sh 'sudo -E bash /init-container-script.sh'
                     sh 'echo "Hello World"'
                     sh 'sleep 99999'
                 }
