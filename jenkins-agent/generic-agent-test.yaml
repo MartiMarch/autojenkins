@@ -10,24 +10,8 @@ spec:
       command: ["sh", "-c"]
       env:
         - name: CLEAR_CACHE_PATHS
-          value: "false"
-      args:
-        - |
-          if [[ $CLEAR_CACHE_PATHS == "yes" || $CLEAR_CACHE_PATHS == "true" ]]; then
-            echo "Borrando contenido de los directorios de caché..."
-            rm -rf /opt/cache/apk/*
-            rm -rf /opt/cache/asdf/*
-            rm -rf /opt/cache/asdf/plugins/*
-          else
-            echo "No se borra el contenido de los directorios de caché."
-          fi
-          
-          mkdir -p /opt/cache/apk
-          mkdir -p /opt/cache/asdf
-          mkdir -p /opt/cache/jenkins
-          mkdir -p /opt/cache/asdf/plugins
-          mkdir -p /opt/cache/cicdcli
-
+          value: "true"
+      args: ["/init-container-script.sh"]
       volumeMounts:
         - name: agent-cache
           mountPath: /opt

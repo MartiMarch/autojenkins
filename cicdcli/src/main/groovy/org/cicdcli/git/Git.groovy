@@ -31,10 +31,11 @@ class Git {
         }
     }
 
-    static void reference(String repositoryPath) {
+    static String reference(String repositoryPath) {
         ShellOutput so = Shell.exec("git -C ${repositoryPath} rev-parse --abbrev-ref HEAD")
         Shell.checkShellError(so)
-        Logger.info(so.output.replaceAll('\n', ''))
+
+        return so.output.replaceAll('\n', '')
     }
 
     static String ceckout(String repositoryPath, String gitRef) {
@@ -64,7 +65,8 @@ class Git {
         ShellOutput so = Shell.exec("git -C ${repositoryPath} fetch --tags")
         Shell.checkShellError(so)
         so = Shell.exec("git -C ${repositoryPath} tag")
-        Logger.info(so.output)
+
+        return so.output.tokenize('\n')
     }
 
     static void commit(String repositoryPath, String commitMsg) {
@@ -81,6 +83,14 @@ class Git {
         Shell.checkShellError(so)
     }
 
+    static List<String> commitsMessages(String repositoryPath) {
+        String command = "git -C ${repositoryPath} log --pretty=format:'%s'"
+        ShellOutput so = Shell.exec(command)
+        Shell.checkShellError(so)
+
+        return so.output.tokenize('\n')
+    }
+
     private static String getRepoWithToken(String repositoryPath) {
         ShellOutput so = Shell.exec("git -C ${repositoryPath} remote get-url origin")
         Shell.checkShellError(so)
@@ -95,4 +105,5 @@ class Git {
 
         return repository
     }
+
 }

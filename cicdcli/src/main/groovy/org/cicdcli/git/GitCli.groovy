@@ -1,5 +1,6 @@
 package org.cicdcli.git
 
+import org.cicdcli.logger.Logger
 import picocli.CommandLine.Parameters
 import picocli.CommandLine.Option
 import picocli.CommandLine
@@ -18,7 +19,8 @@ import picocli.CommandLine
         Tag,
         ListTags,
         Commit,
-        Configure
+        Configure,
+        CommitsMessages
     ]
 )
 class GitCli implements Runnable {
@@ -102,7 +104,7 @@ class GitCli implements Runnable {
 
         @Override
         void run() {
-            Git.reference(repositoryPath)
+            Logger.info("${Git.reference(repositoryPath)}")
         }
     }
 
@@ -171,7 +173,7 @@ class GitCli implements Runnable {
 
         @Override
         void run() {
-            Git.listTags(repositoryPath)
+            Logger.info("${Git.listTags(repositoryPath)}")
         }
     }
 
@@ -212,6 +214,28 @@ class GitCli implements Runnable {
             Git.configure()
         }
     }
+
+    @CommandLine.Command(
+        name = "commitsMessages",
+        mixinStandardHelpOptions = true,
+        description = "Return all commits messages"
+    )
+    static class CommitsMessages implements Runnable {
+
+        @Parameters(
+            index = "0",
+            description = "Git repository path"
+        )
+        String repositoryPath
+
+        @Override
+        void run() {
+            Git.commitsMessages(repositoryPath).each { String commitMsg ->
+                Logger.info(commitMsg)
+            }
+        }
+    }
+
 
     @Override
     void run() {}

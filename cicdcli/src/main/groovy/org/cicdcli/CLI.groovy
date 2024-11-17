@@ -1,5 +1,6 @@
 package org.cicdcli
 
+import org.cicdcli.Release.ReleaseCli
 import org.cicdcli.git.GitCli
 import org.cicdcli.apk.ApkCli
 import org.cicdcli.asdf.AsdfCli
@@ -14,7 +15,14 @@ import picocli.CommandLine.Command
     mixinStandardHelpOptions = true,
     version = "0.0.0",
     description = "CLI para orquestar el CI y el CD",
-    subcommands = [GitCli, ShellCli, LoggerCli, ApkCli, AsdfCli]
+    subcommands = [
+        GitCli,
+        ShellCli,
+        LoggerCli,
+        ApkCli,
+        AsdfCli,
+        ReleaseCli
+    ]
 )
 class CLI implements Runnable {
 

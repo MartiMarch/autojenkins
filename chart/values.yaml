@@ -364,40 +364,15 @@ jenkins:
         name: generic-agent
         namespace: autojenkins
       spec:
-        initContainers:
-          - name: init-apk-db
-            image: srmmll/generic-agent:0.0.0
-            command: ["sh", "-c"]
-            env:
-              - name: CLEAR_CACHE_PATHS
-                value: "false"
-            args:
-              - |
-                if [[ $CLEAR_CACHE_PATHS == "yes" || $CLEAR_CACHE_PATHS == "true" ]]; then
-                  echo "Borrando contenido de los directorios de caché..."
-                  rm -rf /opt/cache/apk/*
-                  rm -rf /opt/cache/asdf/*
-                  rm -rf /opt/cache/asdf/plugins/*
-                  rm -rf /opt/cache/cicdcli/*
-                else
-                  echo "No se borra el contenido de los directorios de caché."
-                fi
-                
-                mkdir -p /opt/cache/apk
-                mkdir -p /opt/cache/asdf
-                mkdir -p /opt/cache/jenkins
-                mkdir -p /opt/cache/asdf/plugins
-                mkdir -p /opt/cache/cicdcli
-
-            volumeMounts:
-              - name: agent-cache
-                mountPath: /opt
         containers:
           - name: generic-agent
             image: srmmll/generic-agent:0.0.0
             imagePullPolicy: Always
             command: ["bash", "-c"]
-            args: ["sleep 7000"]
+            args: ["sleep 9000"]
+            envs:
+              - name: CLEAR_CACHE_PATHS
+                value: "false"
             volumeMounts:
               - name: agent-cache
                 mountPath: /opt

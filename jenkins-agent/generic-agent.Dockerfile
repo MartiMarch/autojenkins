@@ -1,5 +1,14 @@
 FROM alpine:3.20.3
+
+##################
+# Permissions
+##################
 USER root
+RUN apk add --no-cache sudo
+RUN adduser -D -h /home/jenkins -s /bin/bash jenkins
+RUN echo "jenkins ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+RUN chown -R jenkins:jenkins /opt
+USER jenkins
 
 ##################
 # Envs
@@ -35,7 +44,7 @@ RUN mkdir -p $PATH_CICDCLI_CACHE
 ##################
 # Apk cache configuration
 ##################
-RUN apk add --no-cache bash
+RUN sudo apk add --no-cache bash
 
 ##################
 # Init containers script

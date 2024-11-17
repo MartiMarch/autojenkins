@@ -13,17 +13,17 @@ if [[ $CLEAR_CACHE_PATHS == "yes" || $CLEAR_CACHE_PATHS == "true" ]]; then
     mkdir -p $PATH_CICDCLI_CACHE
 
     echo "Instalando paquetes de APK..."
-    apk add --cache-dir $PATH_APK_CACHE curl
-    apk add --cache-dir $PATH_APK_CACHE git
-    apk add --cache-dir $PATH_APK_CACHE build-base
-    apk add --cache-dir $PATH_APK_CACHE libffi-dev
-    apk add --cache-dir $PATH_APK_CACHE openssl-dev
-    apk add --cache-dir $PATH_APK_CACHE bzip2-dev
-    apk add --cache-dir $PATH_APK_CACHE zlib-dev
-    apk add --cache-dir $PATH_APK_CACHE xz-dev
-    apk add --cache-dir $PATH_APK_CACHE openjdk21-jre
-    apk add --cache-dir $PATH_APK_CACHE libc6-compat
-    apk cache clean
+    sudo apk add --cache-dir $PATH_APK_CACHE curl
+    sudo apk add --cache-dir $PATH_APK_CACHE git
+    sudo apk add --cache-dir $PATH_APK_CACHE build-base
+    sudo apk add --cache-dir $PATH_APK_CACHE libffi-dev
+    sudo apk add --cache-dir $PATH_APK_CACHE openssl-dev
+    sudo apk add --cache-dir $PATH_APK_CACHE bzip2-dev
+    sudo apk add --cache-dir $PATH_APK_CACHE zlib-dev
+    sudo apk add --cache-dir $PATH_APK_CACHE xz-dev
+    sudo apk add --cache-dir $PATH_APK_CACHE openjdk21-jre
+    sudo apk add --cache-dir $PATH_APK_CACHE libc6-compat
+    sudo apk cache clean
 
     echo "Instalando asdf..."
     git clone https://github.com/asdf-vm/asdf.git $PATH_ASDF_CACHE/.asdf --branch v0.14.1
