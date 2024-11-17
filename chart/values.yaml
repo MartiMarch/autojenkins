@@ -373,6 +373,10 @@ jenkins:
             envs:
               - name: CLEAR_CACHE_PATHS
                 value: "false"
+              - name: NEXUS_DOMAIN
+                value: "autojenkins-nexus.autojenkins.svc.cluster.local"
+              - name: NEXUS_PORT
+                value: "8081"
             volumeMounts:
               - name: agent-cache
                 mountPath: /opt

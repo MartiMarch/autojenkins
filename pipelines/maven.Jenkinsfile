@@ -3,18 +3,6 @@ pipeline {
         kubernetes {
             inheritFrom 'generic-agent'
             yamlMergeStrategy merge()
-            yaml '''
-              apiVersion: v1
-              kind: Pod
-              spec:
-                containers:
-                - name: generic-agent
-                  env:
-                  - name: NEXUS_DOMAIN
-                    value: "autojenkins-nexus.autojenkins.svc.cluster.local"
-                  - name: NEXUS_PORT
-                    value: "8081"
-            '''
         }
     }
     stages {
