@@ -11,7 +11,7 @@ pipeline {
                 container('generic-agent') {
                     sh 'sudo -E bash /init-container-script.sh'
                     sh 'echo "Hello World"'
-                    sh 'java -jar /opt/cache/cicdcli/ --help'
+                    sh 'java -jar /opt/cache/cicdcli/cicdcli.jar --help'
                 }
             }
         }
