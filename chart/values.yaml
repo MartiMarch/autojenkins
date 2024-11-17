@@ -368,7 +368,9 @@ jenkins:
           - name: generic-agent
             image: srmmll/generic-agent:0.0.0
             imagePullPolicy: Always
-            envs:
+            command: ["bash", "-c"]
+            args: ["sleep 999999"]
+            env:
               - name: CLEAR_CACHE_PATHS
                 value: "true"
             volumeMounts:
@@ -379,8 +381,8 @@ jenkins:
                 memory: "64Mi"
                 cpu: "50m"
               limits:
-                memory: "592Mi"
-                cpu: "250m"
+                memory: "2000Mi"
+                cpu: "1000m"
         volumes:
           - name: agent-cache
             persistentVolumeClaim:

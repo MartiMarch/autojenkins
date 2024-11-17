@@ -11,7 +11,8 @@ pipeline {
                 container('generic-agent') {
                     sh 'sudo -E bash /init-container-script.sh'
                     sh 'echo "Hello World"'
-                    sh 'sleep 99999'
+                    sh 'source ~/.bashrc'
+                    sh 'cicdcli --help'
                 }
             }
         }
