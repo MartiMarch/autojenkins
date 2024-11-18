@@ -76,6 +76,7 @@ docker run --network host -it srmmll/generic-agent:0.0.0 bash
 
 ```bash
 export CLEAR_CACHE_PATHS='yes'
+sudo -E bash /init-container-script.sh
 ```
 
 #h2 CARGAR/LIMPIAR CACHE

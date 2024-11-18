@@ -29,7 +29,7 @@ if [[ $CLEAR_CACHE_PATHS == "yes" || $CLEAR_CACHE_PATHS == "true" ]]; then
     git clone https://github.com/asdf-vm/asdf.git $PATH_ASDF_CACHE/.asdf --branch v0.14.1
     echo -e '\n. $PATH_ASDF_CACHE/.asdf/asdf.sh' >> ~/.bashrc
     echo -e '\n. $PATH_ASDF_CACHE/.asdf/completions/asdf.bash' >> ~/.bashrc
-    echo -e '\nalias cicdcli="java -jar $PATH_CICDCLI_CACHE/cicdcli.jar"' >> ~/.bashrc
+    echo -e '\nalias cicdcli="sudo -E java -jar $PATH_CICDCLI_CACHE/cicdcli.jar"' >> ~/.bashrc
 
     echo "Instalando CLI de CICD en cache"
     curl -u $NEXUS_USER:$NEXUS_PASSWORD "$NEXUS_HTTP_PROTOCOL://$NEXUS_DOMAIN:$NEXUS_PORT/repository/$NEXUS_MVN_REPOSITORY/$NEXUS_MVN_CICDCLI_JAR_SUBPATH" -o $PATH_CICDCLI_CACHE/cicdcli.jar

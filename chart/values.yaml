@@ -147,6 +147,9 @@ jenkins:
       - pipeline-groovy-lib:740.va_2701257fe8d
       - github:1.40.0
       - gitea:220.v4618c82a_40fb_
+      - build-pipeline-plugin:2.0.2
+      - blueocean:1.27.16
+      - pipeline-stage-view:2.34
 
     installLatestPlugins: true
     installLatestSpecifiedPlugins: false
