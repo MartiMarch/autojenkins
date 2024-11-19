@@ -379,6 +379,11 @@ jenkins:
             volumeMounts:
               - name: agent-cache
                 mountPath: /opt
+              - mountPath: /var/run/docker.sock
+                name: docker-sock
+              - name: nexus-mvn-settings
+                mountPath: /opt/settings.xml
+                subPath: settings.xml
             resources:
               requests:
                 memory: "64Mi"
@@ -387,9 +392,15 @@ jenkins:
                 memory: "2000Mi"
                 cpu: "1000m"
         volumes:
+          - name: nexus-mvn-settings
+              configMap:
+                name: nexus-mvn-settings
           - name: agent-cache
             persistentVolumeClaim:
               claimName: autojenkins-agent-cache
+          - name: docker-sock
+            hostPath:
+              path: /var/run/docker.sock
     yamlMergeStrategy: "merge"
     inheritYamlMergeStrategy: false
     connectTimeout: 100

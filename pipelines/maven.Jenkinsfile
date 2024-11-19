@@ -55,7 +55,7 @@ pipeline {
             steps {
                 container('generic-agent') {
                     writeSettings()
-                    sh('mvn deploy -s settings.xml -DskipTests')
+                    sh('mvn deploy -s /opt/settings.xml -DskipTests')
                 }
             }
         }
