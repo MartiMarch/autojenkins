@@ -39,7 +39,7 @@ class Release {
         }
     }
 
-    static String getName(String repositoryPath) {
+    static String name(String repositoryPath) {
         ShellOutput so = Shell.exec("basename \$(git rev-parse --show-toplevel)")
         Shell.checkShellError(so)
 

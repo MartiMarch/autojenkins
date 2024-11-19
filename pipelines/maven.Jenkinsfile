@@ -19,6 +19,10 @@ pipeline {
                     script {
                         initialize()
                         cicdcli('apk add "maven"')
+
+                        if(isPushMaster()){
+                            cicdcli('apk add "docker"')
+                        }
                     }
                 }
             }
@@ -64,8 +68,14 @@ pipeline {
                     script {
                         if(isPushMaster()) {
                             sh('mvn clean package')
+
                             cicdcli('apk add "docker"')
-                            sh('docker build -f Dockerfile -t ')
+                            String nextVersion = cicdcli('release nextVersion "."')
+                            String projectName = cicdcli('')
+
+                            print(nextVersion)
+                            print(projectName)
+                            //sh('docker build -f Dockerfile -t ')
                         }
                     }
                 }
@@ -76,7 +86,7 @@ pipeline {
                 container('generic-agent') {
                     script {
                         if(isPushMaster()) {
-                            String nextVersion = cicdcli('release nextVersion "."')
+
                             writeSettings()
                             sh('mvn deploy -s /opt/settings.xml -DskipTests')
                         }

@@ -13,7 +13,8 @@ import picocli.CommandLine
         CurrentVersion,
         NextVersion,
         Target,
-        Source
+        Source,
+        Name
     ]
 )
 class ReleaseCli implements Runnable {
@@ -57,6 +58,25 @@ class ReleaseCli implements Runnable {
             Logger.info(
                 Release.nextVersion(repositoryPath)
             )
+        }
+    }
+
+    @CommandLine.Command(
+        name = "name",
+        mixinStandardHelpOptions = true,
+        description = "Return project name"
+    )
+    static class Name implements Runnable {
+
+        @Parameters(
+            index = "0",
+            description = "Git repository path"
+        )
+        String repositoryPath
+
+        @Override
+        void run() {
+            print(Release.name(repositoryPath))
         }
     }
 
