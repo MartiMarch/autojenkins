@@ -86,8 +86,6 @@ pipeline {
                 container('generic-agent') {
                     script {
                         if(isPushMaster()) {
-
-                            writeSettings()
                             sh('mvn deploy -s /opt/settings.xml -DskipTests')
                         }
                     }
