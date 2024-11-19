@@ -71,7 +71,7 @@ pipeline {
 
                             cicdcli('apk add "docker"')
                             String nextVersion = cicdcli('release nextVersion "."')
-                            String projectName = cicdcli('')
+                            String projectName = cicdcli('release name "."')
 
                             print(nextVersion)
                             print(projectName)
