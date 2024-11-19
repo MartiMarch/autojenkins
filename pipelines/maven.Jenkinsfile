@@ -91,6 +91,7 @@ pipeline {
 
 
 void initialize(){
+    sh("export CLEAR_CACHE_PATHS='yes'")
     sh('sudo -E bash /init-container-script.sh')
 }
 
