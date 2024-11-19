@@ -16,22 +16,34 @@ pipeline {
         stage('Initalize') {
             steps {
                 container('generic-agent') {
-                    initialize()
-                    cicdcli('apk add "maven"')
+                    script {
+                        if(isPR()) {
+                            initialize()
+                            cicdcli('apk add "maven"')
+                        }
+                    }
                 }
             }
         }
         stage('Lint') {
             steps {
                 container('generic-agent') {
-                    sh('mvn checkstyle:check')
+                    script {
+                        if(isPR()) {
+                            sh('mvn checkstyle:check')
+                        }
+                    }
                 }
             }
         }
         stage('Test') {
             steps {
                 container('generic-agent') {
-                    sh('mvn test')
+                    script {
+                        if(isPR()) {
+                            sh('mvn test')
+                        }
+                    }
                 }
             }
         }
@@ -39,23 +51,39 @@ pipeline {
         stage('Owsap') {
             steps {
                 container('generic-agent') {
-                    sh('mvn org.owasp:dependency-check-maven:check')
+                    script {
+                        if(isPR()) {
+                            sh('mvn org.owasp:dependency-check-maven:check')
+                        }
+                    }
                 }
             }
         }
         */
         stage('Build') {
-            steps {
-                container('generic-agent') {
-                    sh('mvn clean package')
+            stage('Maven build') {
+                steps {
+                    container('generic-agent') {
+                        script {
+                            if(isPushMaster()) {
+                                sh('mvn clean package')
+                                cicdcli('apk add "docker"')
+                                sh('docker build -f Dockerfile -t ')
+                            }
+                        }
+                    }
                 }
             }
         }
-        stage('Puiblish') {
+        stage('Publish') {
             steps {
                 container('generic-agent') {
-                    writeSettings()
-                    sh('mvn deploy -s /opt/settings.xml -DskipTests')
+                    script {
+                        if(isPushMaster()) {
+                            writeSettings()
+                            sh('mvn deploy -s /opt/settings.xml -DskipTests')
+                        }
+                    }
                 }
             }
         }
@@ -75,20 +103,25 @@ String cicdcli(String command){
     return output
 }
 
-/*
-* Esta chapuza se ha de cargar desde un ConfigMap desde el agente
-*/
-void writeSettings(){
-    writeFile file: 'settings.xml', text:
-'''
-<settings>
-    <servers>
-        <server>
-            <id>nexus-releases</id>
-            <username>admin</username>
-            <password>1234</password>
-        </server>
-    </servers>
-</settings>
-'''
+
+boolean isPushMaster() {
+    String source = cicdcli('release source "."')
+    String target = cicdcli('release target "."')
+
+    return (
+        source == 'master'
+        &&
+        target == 'master'
+    )
+}
+
+boolean isPR() {
+    String source = cicdcli('release source "."')
+    String target = cicdcli('release target "."')
+
+    return (
+        source != 'master'
+        &&
+        target == 'master'
+    )
 }
