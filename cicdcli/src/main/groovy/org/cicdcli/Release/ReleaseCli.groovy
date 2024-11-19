@@ -11,7 +11,9 @@ import picocli.CommandLine
     mixinStandardHelpOptions = true,
     subcommands = [
         CurrentVersion,
-        NextVersion
+        NextVersion,
+        Target,
+        Source
     ]
 )
 class ReleaseCli implements Runnable {
@@ -54,6 +56,48 @@ class ReleaseCli implements Runnable {
         void run() {
             Logger.info(
                 Release.nextVersion(repositoryPath)
+            )
+        }
+    }
+
+    @CommandLine.Command(
+        name = "target",
+        mixinStandardHelpOptions = true,
+        description = "Used to known git target"
+    )
+    static class Target implements Runnable {
+
+        @Parameters(
+            index = "0",
+            description = "Git repository path"
+        )
+        String repositoryPath
+
+        @Override
+        void run(){
+            Logger.info(
+                Release.target(repositoryPath)
+            )
+        }
+    }
+
+    @CommandLine.Command(
+        name = "source",
+        mixinStandardHelpOptions = true,
+        description = "Used to known git source"
+    )
+    static class Source implements Runnable {
+
+        @Parameters(
+            index = "0",
+            description = "Git repository path"
+        )
+        String repositoryPath
+
+        @Override
+        void run(){
+            Logger.info(
+                Release.source(repositoryPath)
             )
         }
     }

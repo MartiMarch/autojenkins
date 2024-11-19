@@ -393,8 +393,8 @@ jenkins:
                 cpu: "1000m"
         volumes:
           - name: nexus-mvn-settings
-              configMap:
-                name: nexus-mvn-settings
+            configMap:
+              name: nexus-mvn-settings
           - name: agent-cache
             persistentVolumeClaim:
               claimName: autojenkins-agent-cache

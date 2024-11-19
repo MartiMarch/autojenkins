@@ -61,15 +61,13 @@ pipeline {
         }
         */
         stage('Build') {
-            stage('Maven build') {
-                steps {
-                    container('generic-agent') {
-                        script {
-                            if(isPushMaster()) {
-                                sh('mvn clean package')
-                                cicdcli('apk add "docker"')
-                                sh('docker build -f Dockerfile -t ')
-                            }
+            steps {
+                container('generic-agent') {
+                    script {
+                        if(isPushMaster()) {
+                            sh('mvn clean package')
+                            cicdcli('apk add "docker"')
+                            sh('docker build -f Dockerfile -t ')
                         }
                     }
                 }

@@ -1,6 +1,8 @@
 package org.cicdcli.Release
 
 import org.cicdcli.git.Git
+import org.cicdcli.shell.Shell
+import org.cicdcli.shell.po.ShellOutput
 
 
 class Release {
@@ -34,6 +36,37 @@ class Release {
                 return "${nextVersion[0].toInteger()+1}.${nextVersion[1].toInteger()}.${nextVersion[2]}"
 
             return '0.0.0'
+        }
+    }
+
+    static String getName(String repositoryPath) {
+        ShellOutput so = Shell.exec("basename \$(git rev-parse --show-toplevel)")
+        Shell.checkShellError(so)
+
+        return so.output
+    }
+
+    static String target(String repositoryPath) {
+        ShellOutput so = Shell.exec("git -C ${repositoryPath} remote show origin")
+        Shell.checkShellError(so)
+
+        def headBranchLine = so.output.readLines().find { it.contains("HEAD branch") }
+        if(!headBranchLine) {
+            return null
+        } else {
+            return headBranchLine.split(/\s+/).last()
+        }
+    }
+
+    static String source(String repositoryPath){
+        ShellOutput so = Shell.exec("git -C ${repositoryPath} branch -r --contains HEAD")
+        Shell.checkShellError(so)
+
+        if(so.output) {
+            List<String> branches = so.output.split("\n")
+            return branches[0].replaceAll('origin/', '').trim()
+        } else {
+            return null
         }
     }
 
