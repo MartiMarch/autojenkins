@@ -17,8 +17,8 @@ pipeline {
             steps {
                 container('generic-agent') {
                     script {
+                        initialize()
                         if(isPR()) {
-                            initialize()
                             cicdcli('apk add "maven"')
                         }
                     }

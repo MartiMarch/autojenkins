@@ -75,9 +75,7 @@ class ReleaseCli implements Runnable {
 
         @Override
         void run(){
-            Logger.info(
-                Release.target(repositoryPath)
-            )
+            print(Release.target(repositoryPath))
         }
     }
 
@@ -96,9 +94,7 @@ class ReleaseCli implements Runnable {
 
         @Override
         void run(){
-            Logger.info(
-                Release.source(repositoryPath)
-            )
+            print(Release.source(repositoryPath))
         }
     }
 
