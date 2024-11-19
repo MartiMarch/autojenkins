@@ -18,9 +18,7 @@ pipeline {
                 container('generic-agent') {
                     script {
                         initialize()
-                        if(isPR()) {
-                            cicdcli('apk add "maven"')
-                        }
+                        cicdcli('apk add "maven"')
                     }
                 }
             }
@@ -78,6 +76,7 @@ pipeline {
                 container('generic-agent') {
                     script {
                         if(isPushMaster()) {
+                            String nextVersion = cicdcli('release nextVersion "."')
                             writeSettings()
                             sh('mvn deploy -s /opt/settings.xml -DskipTests')
                         }
