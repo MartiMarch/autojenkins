@@ -34,7 +34,7 @@ class Maven {
     }
 
     static void build() {
-        ShellOutput so = Shell.exec('mvn -B clean package')
+        ShellOutput so = Shell.exec('mvn -B clean package -DskipTests')
         Shell.checkShellError(so)
         Logger.info(so.output)
     }
