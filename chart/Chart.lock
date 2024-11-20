@@ -9,4 +9,4 @@ dependencies:
   repository: https://dl.gitea.com/charts/
   version: 10.5.0
 digest: sha256:5eaf065eecd5408ff96f4d3e1d8a24539380b8b327af2131781aed1eae4933fd
-generated: "2024-11-11T20:02:09.570384593+01:00"
+generated: "2024-11-20T15:28:05.22346+01:00"

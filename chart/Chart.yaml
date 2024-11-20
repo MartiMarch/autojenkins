@@ -14,3 +14,6 @@ dependencies:
   - name: gitea
     version: 10.5.0
     repository: https://dl.gitea.com/charts/
+#  - name: sonarqube
+#    repository: https://SonarSource.github.io/helm-chart-sonarqube
+#    version: 10.7.0+3598

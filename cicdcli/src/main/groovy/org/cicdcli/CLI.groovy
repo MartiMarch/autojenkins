@@ -1,10 +1,12 @@
 package org.cicdcli
 
-import org.cicdcli.Release.ReleaseCli
+import org.cicdcli.release.ReleaseCli
 import org.cicdcli.git.GitCli
 import org.cicdcli.apk.ApkCli
 import org.cicdcli.asdf.AsdfCli
+import org.cicdcli.maven.MavenCli
 import org.cicdcli.shell.ShellCli
+import org.cicdcli.docker.DockerCli
 import org.cicdcli.logger.LoggerCli
 import picocli.CommandLine
 import picocli.CommandLine.Command
@@ -21,7 +23,9 @@ import picocli.CommandLine.Command
         LoggerCli,
         ApkCli,
         AsdfCli,
-        ReleaseCli
+        ReleaseCli,
+        DockerCli,
+        MavenCli
     ]
 )
 class CLI implements Runnable {

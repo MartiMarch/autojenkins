@@ -1,6 +1,5 @@
-package org.cicdcli.Release
+package org.cicdcli.release
 
-import org.cicdcli.logger.Logger
 import picocli.CommandLine.Parameters
 import picocli.CommandLine
 

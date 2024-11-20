@@ -733,6 +733,9 @@ nexus:
     limits:
       cpu: "2000m"
       memory: "4000Mi"
+  
+sonar:
+  namespace: autojenkins
 
 ###################
 # Si falla el port.forward, meterse en el pod y cambiar permisos de archivos en este path:

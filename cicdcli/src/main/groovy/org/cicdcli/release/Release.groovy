@@ -1,4 +1,4 @@
-package org.cicdcli.Release
+package org.cicdcli.release
 
 import org.cicdcli.git.Git
 import org.cicdcli.shell.Shell
@@ -40,10 +40,10 @@ class Release {
     }
 
     static String name(String repositoryPath) {
-        ShellOutput so = Shell.exec("basename \$(git rev-parse --show-toplevel)")
+        ShellOutput so = Shell.exec("git -C ${repositoryPath} rev-parse --show-toplevel")
         Shell.checkShellError(so)
 
-        return so.output
+        return so.output.tokenize('/').last().tokenize('_').first()
     }
 
     static String target(String repositoryPath) {
