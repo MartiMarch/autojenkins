@@ -43,7 +43,7 @@ pipeline {
                 container('generic-agent') {
                     script {
                         if(isPR()) {
-                            dcli('maven test')
+                            cicdcli('maven test')
                         }
                     }
                 }
@@ -55,7 +55,7 @@ pipeline {
                 container('generic-agent') {
                     script {
                         if(isPR()) {
-                            dcli('maven owasp')
+                            cicdcli('maven owasp')
                         }
                     }
                 }
