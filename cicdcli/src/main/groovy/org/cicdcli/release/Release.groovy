@@ -56,7 +56,7 @@ class Release {
         }
     }
 
-    static String source(String repositoryPath){
+    static String source(String repositoryPath) {
         ShellOutput so = Shell.exec("git -C ${repositoryPath} branch -r --contains HEAD")
         Shell.checkShellError(so)
 
@@ -68,10 +68,19 @@ class Release {
         }
     }
 
-    static boolean isMasterPush(String repositoryPath){
+    static boolean isMasterToMaster(String repositoryPath) {
         return (
-            target('repositoryPath')
+            source(repositoryPath) == 'master'
+            &&
+            target(repositoryPath) == 'master'
+        )
+    }
 
+    static boolean isMasterPR(String repositoryPath) {
+        return (
+            source(repositoryPath) != 'master'
+            &&
+            target(repositoryPath) == 'master'
         )
     }
 

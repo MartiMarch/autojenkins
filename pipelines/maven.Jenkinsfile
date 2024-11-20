@@ -108,23 +108,9 @@ String cicdcli(String command){
 
 
 boolean isPushMaster() {
-    String source = cicdcli('release source "."')
-    String target = cicdcli('release target "."')
-
-    return (
-        source == 'master'
-        &&
-        target == 'master'
-    )
+    return cicdcli('release isMasterToMaster "."') == 'true'
 }
 
 boolean isPR() {
-    String source = cicdcli('release source "."')
-    String target = cicdcli('release target "."')
-
-    return (
-        source != 'master'
-        &&
-        target == 'master'
-    )
+    return  cicdcli('release isMasterPR "."') == 'true'
 }

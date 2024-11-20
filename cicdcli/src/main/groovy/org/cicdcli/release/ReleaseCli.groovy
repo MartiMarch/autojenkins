@@ -13,7 +13,9 @@ import picocli.CommandLine
         NextVersion,
         Target,
         Source,
-        Name
+        Name,
+        IsMasterToMaster,
+        IsMasterPR
     ]
 )
 class ReleaseCli implements Runnable {
@@ -110,6 +112,44 @@ class ReleaseCli implements Runnable {
         @Override
         void run(){
             print(Release.source(repositoryPath))
+        }
+    }
+
+    @CommandLine.Command(
+        name = "isMasterToMaster",
+        mixinStandardHelpOptions = true,
+        description = "Used to check if a push os from master to master"
+    )
+    static class IsMasterToMaster implements Runnable {
+
+        @Parameters(
+            index = "0",
+            description = "Git repository path"
+        )
+        String repositoryPath
+
+        @Override
+        void run(){
+            print(Boolean.toString(Release.isMasterToMaster(repositoryPath)))
+        }
+    }
+
+    @CommandLine.Command(
+        name = "isMasterPR",
+        mixinStandardHelpOptions = true,
+        description = "Used to check if a push os from master to master"
+    )
+    static class IsMasterPR implements Runnable {
+
+        @Parameters(
+                index = "0",
+                description = "Git repository path"
+        )
+        String repositoryPath
+
+        @Override
+        void run(){
+            print(Boolean.toString(Release.isMasterPR(repositoryPath)))
         }
     }
 
