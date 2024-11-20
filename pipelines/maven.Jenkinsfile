@@ -3,6 +3,7 @@ pipeline {
         kubernetes {
             inheritFrom 'generic-agent'
             yamlMergeStrategy merge()
+            defaultContainer 'generic-agent'
         }
     }
     options {
@@ -15,89 +16,67 @@ pipeline {
     stages {
         stage('Initalize') {
             steps {
-                container('generic-agent') {
-                    script {
-                        initialize()
-                        cicdcli('apk add "maven"')
-
-                        if(isPushMaster()){
-                            cicdcli('apk add "docker"')
-                        }
-                    }
+                script {
+                    sh("export CLEAR_CACHE_PATHS='yes'")
+                    sh('sudo -E bash /init-container-script.sh')
+                    cicdcli('apk add "maven"')
+                    cicdcli('apk add "docker"')
                 }
             }
         }
         stage('Lint') {
+            when {
+                expression { return isPR() }
+            }
             steps {
-                container('generic-agent') {
-                    script {
-                        if(isPR()) {
-                            cicdcli('maven lint')
-                        }
-                    }
-                }
+                cicdcli('maven lint')
             }
         }
         stage('Test') {
+            when {
+                expression { return isPR() }
+            }
             steps {
-                container('generic-agent') {
-                    script {
-                        if(isPR()) {
-                            cicdcli('maven test')
-                        }
-                    }
-                }
+                cicdcli('maven test')
             }
         }
         /* Esta cosa es demasiado lenta...
         stage('Owsap') {
+            when {
+                expression { return isPR() }
+            }
             steps {
-                container('generic-agent') {
-                    script {
-                        if(isPR()) {
-                            cicdcli('maven owasp')
-                        }
-                    }
-                }
+                cicdcli('maven owasp')
             }
         }
         */
         stage('Build') {
+            when {
+                expression { return isPushMaster() }
+            }
             steps {
-                container('generic-agent') {
-                    script {
-                        if(isPushMaster()) {
-                            cicdcli('maven build')
-                            cicdcli('apk add "docker"')
-                            cicdcli('maven updateVersion "pom.xml"')
-                            String version = cicdcli('maven version "pom.xml"')
-                            String projectName = cicdcli('maven name "pom.xml"')
-                            //sh("docker build -f Dockerfile -t ${projectName}:${nextVersion} . ")
-                        }
-                    }
+                script {
+                    cicdcli('maven build')
+                    cicdcli('apk add "docker"')
+                    cicdcli('maven updateVersion "pom.xml"')
+                    String version = cicdcli('maven version "pom.xml"')
+                    String projectName = cicdcli('maven name "pom.xml"')
+                    //sh("docker build -f Dockerfile -t ${projectName}:${nextVersion} . ")
                 }
             }
         }
         stage('Publish') {
+            when {
+                expression { return isPushMaster() }
+            }
             steps {
-                container('generic-agent') {
-                    script {
-                        if(isPushMaster()) {
-                            cicdcli('maven publish')
-                        }
-                    }
-                }
+                cicdcli('maven publish')
+                //TODO: publicar en Nexus, un build con docker, analizar con rivy y hadolint y un rico push
             }
         }
-        //TODO: publicar en Nexus, un build con docker, analizar con rivy y hadolint y un rico push
     }
 }
 
-
-void initialize(){
-    sh("export CLEAR_CACHE_PATHS='yes'")
-    sh('sudo -E bash /init-container-script.sh')
-}
 
 String cicdcli(String command){
     String output = sh(script: "sudo -E java -jar /opt/cache/cicdcli/cicdcli.jar ${command}", returnStdout: true)
@@ -106,11 +85,10 @@ String cicdcli(String command){
     return output
 }
 
-
 boolean isPushMaster() {
     return cicdcli('release isMasterToMaster "."') == 'true'
 }
 
 boolean isPR() {
-    return  cicdcli('release isMasterPR "."') == 'true'
+    return cicdcli('release isMasterPR "."') == 'true'
 }
