@@ -56,7 +56,7 @@ pipeline {
             }
             steps {
                 script {
-                    cicdcli('maven updateVersion "pom.xml"')
+                    cicdcli('maven updateVersion "." "pom.xml"')
                     String name = cicdcli('maven name "pom.xml"')
                     String version = cicdcli('maven version "pom.xml"')
 
