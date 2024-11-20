@@ -48,12 +48,13 @@ pipeline {
             when { expression { return isPushMaster() } }
             steps {
                 script {
-                    cicdcli('maven build')
-                    cicdcli('apk add "docker"')
                     cicdcli('maven updateVersion "pom.xml"')
+                    String name = cicdcli('maven name "pom.xml"')
                     String version = cicdcli('maven version "pom.xml"')
-                    String projectName = cicdcli('maven name "pom.xml"')
-                    //sh("docker build -f Dockerfile -t ${projectName}:${nextVersion} . ")
+
+                    sh("docker build -f Dockerfile -t $DOCKER_HUB_REPO/${name}:${version} . ")
+                    sh('docker loign -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASSWORD')
+                    sh('docker push $DOCKER_HUB_REPO/${name}:${version})
                 }
             }
         }
