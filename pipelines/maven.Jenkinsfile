@@ -25,27 +25,35 @@ pipeline {
             }
         }
         stage('Lint') {
-            when { expression { return isPR() } }
+            when {
+                expression { return isPR() }
+            }
             steps {
                 cicdcli('maven lint')
             }
         }
         stage('Test') {
-            when { expression { return isPR() } }
+            when {
+                expression { return isPR() }
+            }
             steps {
                 cicdcli('maven test')
             }
         }
         /* Esta cosa es demasiado lenta...
         stage('Owsap') {
-            when { expression { return isPR() } }
+            when {
+                expression { return isPR() }
+            }
             steps {
                 cicdcli('maven owasp')
             }
         }
         */
         stage('Build') {
-            when { expression { return isPushMaster() } }
+            when {
+                expression { return isPushMaster() }
+            }
             steps {
                 script {
                     cicdcli('maven updateVersion "pom.xml"')
@@ -59,7 +67,9 @@ pipeline {
             }
         }
         stage('Publish') {
-            when { expression { return isPushMaster() } }
+            when {
+                expression { return isPushMaster() }
+            }
             steps {
                 cicdcli('maven publish')
                 //TODO: publicar en Nexus, un build con docker, analizar con rivy y hadolint y un rico push
