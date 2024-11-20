@@ -60,9 +60,9 @@ pipeline {
                     String name = cicdcli('maven name "pom.xml"')
                     String version = cicdcli('maven version "pom.xml"')
 
-                    sh("docker build -f Dockerfile -t $DOCKER_HUB_REPO/${name}:${version} . ")
+                    sh("docker build -f Dockerfile -t \$DOCKER_HUB_REPO/${name}:${version} . ")
                     sh('docker loign -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASSWORD')
-                    sh('docker push $DOCKER_HUB_REPO/${name}:${version})
+                    sh("docker push \$DOCKER_HUB_REPO/${name}:${version}")
                 }
             }
         }
