@@ -751,7 +751,7 @@ sonar:
 
 dockerhub:
   user: srmmll
-  password: dckr_pat_ex6QJc1kwWb9itJjy7KsXmAq9E4
+  password: ****
 
 ###################
 # Si falla el port.forward, meterse en el pod y cambiar permisos de archivos en este path:
