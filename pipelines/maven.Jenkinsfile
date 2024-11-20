@@ -32,7 +32,7 @@ pipeline {
                 container('generic-agent') {
                     script {
                         if(isPR()) {
-                            sh('mvn checkstyle:check')
+                            cicdcli('maven lint')
                         }
                     }
                 }
@@ -43,7 +43,7 @@ pipeline {
                 container('generic-agent') {
                     script {
                         if(isPR()) {
-                            sh('mvn test')
+                            dcli('maven test')
                         }
                     }
                 }
@@ -55,7 +55,7 @@ pipeline {
                 container('generic-agent') {
                     script {
                         if(isPR()) {
-                            sh('mvn org.owasp:dependency-check-maven:check')
+                            dcli('maven owasp')
                         }
                     }
                 }
@@ -67,15 +67,12 @@ pipeline {
                 container('generic-agent') {
                     script {
                         if(isPushMaster()) {
-                            sh('mvn clean package')
-
+                            cicdcli('maven build')
                             cicdcli('apk add "docker"')
-                            String nextVersion = cicdcli('release nextVersion "."')
-                            String projectName = cicdcli('release name "."')
-
-                            print(nextVersion)
-                            print(projectName)
-                            //sh('docker build -f Dockerfile -t ')
+                            cicdcli('maven updateVersion "pom.xml"')
+                            String version = cicdcli('maven version "pom.xml"')
+                            String projectName = cicdcli('maven name "pom.xml"')
+                            //sh("docker build -f Dockerfile -t ${projectName}:${nextVersion} . ")
                         }
                     }
                 }
@@ -86,7 +83,7 @@ pipeline {
                 container('generic-agent') {
                     script {
                         if(isPushMaster()) {
-                            sh('mvn deploy -s /opt/settings.xml -DskipTests')
+                            cicdcli('maven publish')
                         }
                     }
                 }

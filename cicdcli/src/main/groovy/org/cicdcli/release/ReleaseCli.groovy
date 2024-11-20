@@ -52,7 +52,7 @@ class ReleaseCli implements Runnable {
 
         @Override
         void run() {
-            print(Release.nextVersion(repositoryPath))
+            print(Release.nextVersion(repositoryPath, Release.currentVersion(repositoryPath)))
         }
     }
 

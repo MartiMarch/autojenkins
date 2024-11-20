@@ -1,6 +1,8 @@
 package org.cicdcli.maven
 
+import org.cicdcli._helpers.Xml
 import org.cicdcli.apk.Apk
+import org.cicdcli.release.Release
 import org.cicdcli.shell.Shell
 import org.cicdcli.logger.Logger
 import org.cicdcli.shell.po.ShellOutput
@@ -42,5 +44,21 @@ class Maven {
         ShellOutput so = Shell.exec("mvn deploy -s ${settingsPath} -DskipTests")
         Shell.checkShellError(so)
         Logger.info(so.output)
+    }
+
+    static String name(String pomPath) {
+        return Xml.castXml(pomPath)?.artifactId
+    }
+
+    static String version(String pomPath) {
+        return Xml.castXml(pomPath)?.version
+    }
+
+    static void updateVersion(String repositoryPath, String pomPath){
+        String nextVersion = Release.nextVersion(repositoryPath, version(pomPath))
+        Map pom = Xml.castXml(pomPath)
+        pom?.version = nextVersion
+        Xml.updateXml(pomPath, pom)
+        Logger.info("Project updated to version ${nextVersion}")
     }
 }

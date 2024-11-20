@@ -1,5 +1,7 @@
 package org.cicdcli.maven
 
+import org.cicdcli.logger.Logger
+import picocli.CommandLine.Parameters
 import picocli.CommandLine
 
 
@@ -13,7 +15,10 @@ import picocli.CommandLine
         Test,
         Owasp,
         Build,
-        Publish
+        Publish,
+        Name,
+        Version,
+        UpdateVersion
     ]
 )
 class MavenCli implements Runnable {
@@ -93,6 +98,81 @@ class MavenCli implements Runnable {
         @Override
         void run() {
             Maven.publish()
+        }
+    }
+
+    @CommandLine.Command(
+        name = "name",
+        mixinStandardHelpOptions = true,
+        description = "Build the project and creates JAR file"
+    )
+    static class Name implements Runnable {
+
+        @Parameters(
+            index = "0",
+            description = "pom.xml path"
+        )
+        String pomPath
+
+        @Override
+        void run() {
+            String name = Maven.name(pomPath)
+
+            if(name == null){
+                Logger.error("Can't found project name within pom.xml")
+            } else {
+                print(name)
+            }
+        }
+    }
+
+    @CommandLine.Command(
+        name = "version",
+        mixinStandardHelpOptions = true,
+        description = "Build the project and creates JAR file"
+    )
+    static class Version implements Runnable {
+
+        @Parameters(
+            index = "0",
+            description = "pom.xml path"
+        )
+        String pomPath
+
+        @Override
+        void run() {
+            String version = Maven.version(pomPath)
+
+            if(version == null){
+                Logger.error("Can't found project version within pom.xml")
+            } else {
+                print(version)
+            }
+        }
+    }
+
+    @CommandLine.Command(
+        name = "updateVersion",
+        mixinStandardHelpOptions = true,
+        description = "Update pom.xml version"
+    )
+    static class UpdateVersion implements Runnable {
+
+        @Parameters(
+            index = "0",
+            description = "Git repository path"
+        )
+        String repositoryPath
+
+        @Parameters(
+            index = "1",
+            description = "pom.xml path"
+        )
+        String pomPath
+
+        @Override
+        void run() {
+            Maven.updateVersion(repositoryPath, pomPath)
         }
     }
 

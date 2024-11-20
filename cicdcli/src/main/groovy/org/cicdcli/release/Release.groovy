@@ -13,7 +13,7 @@ class Release {
         }
     }
 
-    static String nextVersion(String repositoryPath) {
+    static String nextVersion(String repositoryPath, String currentVersion = null) {
         String releaseType = Git.commitsMessages(repositoryPath).findResult { String commitMessage ->
             if (isFeatureCommit(commitMessage))
                 return 'feature'
@@ -23,7 +23,6 @@ class Release {
                 return 'break'
         } ?: 'feat'
 
-        String currentVersion = currentVersion(repositoryPath)
         if(currentVersion == null) {
             return '0.0.0'
         } else {
@@ -42,8 +41,7 @@ class Release {
     static String name(String repositoryPath) {
         ShellOutput so = Shell.exec("git -C ${repositoryPath} rev-parse --show-toplevel")
         Shell.checkShellError(so)
-
-        return so.output.tokenize('/').last().tokenize('_').first()
+        return so.output
     }
 
     static String target(String repositoryPath) {
