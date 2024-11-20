@@ -16,32 +16,32 @@ class Maven {
     }
 
     static void lint() {
-        ShellOutput so = Shell.exec('mvn checkstyle:check')
+        ShellOutput so = Shell.exec('mvn -B checkstyle:check')
         Shell.checkShellError(so)
         Logger.info(so.output)
     }
 
     static void test() {
-        ShellOutput so = Shell.exec('mvn test')
+        ShellOutput so = Shell.exec('mvn -B test')
         Shell.checkShellError(so)
         Logger.info(so.output)
     }
 
     static void owasp() {
-        ShellOutput so = Shell.exec('mvn org.owasp:dependency-check-maven:check')
+        ShellOutput so = Shell.exec('mvn -B org.owasp:dependency-check-maven:check')
         Shell.checkShellError(so)
         Logger.info(so.output)
     }
 
     static void build() {
-        ShellOutput so = Shell.exec('mvn clean package')
+        ShellOutput so = Shell.exec('mvn -B clean package')
         Shell.checkShellError(so)
         Logger.info(so.output)
     }
 
     static void publish() {
         String settingsPath = MavenConf.getSettingsPath()
-        ShellOutput so = Shell.exec("mvn deploy -s ${settingsPath} -DskipTests")
+        ShellOutput so = Shell.exec("mvn -B deploy -s ${settingsPath} -DskipTests")
         Shell.checkShellError(so)
         Logger.info(so.output)
     }

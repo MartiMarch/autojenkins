@@ -68,6 +68,13 @@ class Release {
         }
     }
 
+    static boolean isMasterPush(String repositoryPath){
+        return (
+            target('repositoryPath')
+
+        )
+    }
+
     private static boolean isFeatureCommit(String commitMessage) {
         return commitMessage.startsWith('feat')
     }
