@@ -75,7 +75,7 @@ pipeline {
                     String name = cicdcli('maven name "pom.xml"')
                     String version = cicdcli('maven version "pom.xml"')
 
-                    cicdcli('maven publish')
+                    cicdcli('maven publish "pom.xml"')
                     cicdcli("docker login")
                     cicdcli("docker push '${name}' '${version}'")
                 }
