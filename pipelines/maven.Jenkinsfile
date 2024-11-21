@@ -71,7 +71,7 @@ pipeline {
                 expression { return isPushMaster() }
             }
             steps {
-                script {
+                script {
                     String name = cicdcli('maven name "pom.xml"')
                     String version = cicdcli('maven version "pom.xml"')
 
