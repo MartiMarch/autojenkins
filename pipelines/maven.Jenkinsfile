@@ -80,17 +80,18 @@ pipeline {
 }
 
 
-String cicdcli(String command){
+String cicdcli(String command, boolean mustPrint = true){
     String output = sh(script: "sudo -E java -jar /opt/cache/cicdcli/cicdcli.jar ${command}", returnStdout: true)
-    println(output)
+    if mustPrint == true:
+        println(output)
 
     return output
 }
 
 boolean isPushMaster() {
-    return cicdcli('release isMasterToMaster "."') == 'true'
+    return cicdcli('release isMasterToMaster "."', false) == 'true'
 }
 
 boolean isPR() {
-    return cicdcli('release isMasterPR "."') == 'true'
+    return cicdcli('release isMasterPR "."', false) == 'true'
 }

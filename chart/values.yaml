@@ -376,6 +376,8 @@ jenkins:
             env:
               - name: CLEAR_CACHE_PATHS
                 value: "true"
+              - name: CICDCLI_MAVEN_SETTINGS_PATH
+                value: "/opt/settings.xml"
               - name: CICDCLI_DOCKERHUB_REPOSITORY
                 value: "srmmll"
               - name: CICDCLI_DOCKERHUB_USER
