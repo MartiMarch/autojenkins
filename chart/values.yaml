@@ -376,14 +376,14 @@ jenkins:
             env:
               - name: CLEAR_CACHE_PATHS
                 value: "true"
-              - name: DOCKER_HUB_REPO
-                value: srmmll
-              - name: DOCKER_HUB_USER
+              - name: CICDCLI_DOCKERHUB_REPOSITORY
+                value: "srmmll"
+              - name: CICDCLI_DOCKERHUB_USER
                 valueFrom:
                   secretKeyRef:
                     name: dockerhub
                     key: user
-              - name: DOCKER_HUB_PASSWORD
+              - name: CICDCLI_DOCKERHUB_PASSWORD
                 valueFrom:
                   secretKeyRef:
                     name: dockerhub
@@ -751,7 +751,7 @@ sonar:
 
 dockerhub:
   user: srmmll
-  password: ****
+  password: dckr_pat_ex6QJc1kwWb9itJjy7KsXmAq9E4
 
 ###################
 # Si falla el port.forward, meterse en el pod y cambiar permisos de archivos en este path:

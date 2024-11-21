@@ -56,9 +56,9 @@ class Maven {
 
     static void updateVersion(String repositoryPath, String pomPath){
         String nextVersion = Release.nextVersion(repositoryPath, version(pomPath))
-        Map pom = Xml.castXml(pomPath)
-        pom?.version = nextVersion
-        Xml.updateXml(pomPath, pom)
+        ShellOutput so = Shell.exec("mvn -B versions:set -DnewVersion=${nextVersion}")
+        Shell.checkShellError(so)
+
         Logger.info("Project updated to version ${nextVersion}")
     }
 }

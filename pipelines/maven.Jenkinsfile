@@ -59,10 +59,9 @@ pipeline {
                     cicdcli('maven updateVersion "." "pom.xml"')
                     String name = cicdcli('maven name "pom.xml"')
                     String version = cicdcli('maven version "pom.xml"')
-
-                    sh("docker build -f Dockerfile -t \$DOCKER_HUB_REPO/${name}:${version} . ")
-                    sh('docker loign -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASSWORD')
-                    sh("docker push \$DOCKER_HUB_REPO/${name}:${version}")
+                    
+                    cicdcli('maven build')
+                    cicdcli("docker build ${name} ${version}")
                 }
             }
         }
@@ -72,6 +71,8 @@ pipeline {
             }
             steps {
                 cicdcli('maven publish')
+                sh('sudo -E docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASSWORD')
+                sh("sudo -E docker push \$DOCKER_HUB_REPO/${name}:${version}")
                 //TODO: publicar en Nexus, un build con docker, analizar con rivy y hadolint y un rico push
             }
         }
