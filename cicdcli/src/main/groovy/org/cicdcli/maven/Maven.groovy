@@ -39,19 +39,23 @@ class Maven {
         Logger.info(so.output)
     }
 
-    static void publish(String pomPath) {
+    static void publish(String pomPath, boolean isHttps = false) {
         String name = name(pomPath)
-        String group =group(pomPath)
         String version = version(pomPath)
         String jarPath = "target/${name}-${version}.jar"
+        String nexusDomain = MavenConf.getNexusDomain()
+        String nexusPort = MavenConf.getNexusPort()
+        String nexusRepo = MavenConf.getRepository()
+        String nexusHttpProtocol = isHttps ? 'https' : 'http'
+        String settingsRepo = Xml.castXml(MavenConf.getSettingsPath())?.servers?.server?.id
 
         ShellOutput so = Shell.exec(
             "mvn deploy:deploy-file -s ${MavenConf.getSettingsPath()}"
             + " -Dfile=${jarPath}"
-            + " -DgroupId=${group}"
-            + " -DartifactId=${name}"
-            + " -Dversion=${version}"
+            + " -DpomFile=${pomPath}"
             + " -Dpackaging=jar"
+            + " -Durl=${nexusHttpProtocol}://${nexusDomain}:${nexusPort}/repository/${nexusRepo}/"
+            + " -DrepositoryId=${settingsRepo}"
         )
         Shell.checkShellError(so)
         Logger.info(so.output)
@@ -63,10 +67,6 @@ class Maven {
 
     static String version(String pomPath) {
         return Xml.castXml(pomPath)?.version
-    }
-
-    static String group(String pomPath) {
-        return Xml.castXml(pomPath)?.groupId
     }
 
     static void updateVersion(String repositoryPath, String pomPath) {

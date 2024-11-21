@@ -2,6 +2,7 @@ package org.cicdcli.maven
 
 import org.cicdcli.logger.Logger
 import picocli.CommandLine.Parameters
+import picocli.CommandLine.Option
 import picocli.CommandLine
 
 
@@ -101,9 +102,16 @@ class MavenCli implements Runnable {
         )
         String pomPath
 
+        @Option(
+            names = ["--isHttps"],
+            required = false,
+            description = "Path where repository will be cloned"
+        )
+        boolean isHttps = false
+
         @Override
         void run() {
-            Maven.publish(pomPath)
+            Maven.publish(pomPath, isHttps)
         }
     }
 
