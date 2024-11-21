@@ -41,12 +41,13 @@ pipeline {
             }
         }
         /* Esta cosa es demasiado lenta...
-        stage('Owsap') {
+        stage('Scan') {
             when {
                 expression { return isPR() }
             }
             steps {
-                cicdcli('maven owasp')
+                //cicdcli('maven owasp')
+                // Meter aquilo de trivy y hadolint
             }
         }
         */
@@ -59,7 +60,7 @@ pipeline {
                     cicdcli('maven updateVersion "." "pom.xml"')
                     String name = cicdcli('maven name "pom.xml"')
                     String version = cicdcli('maven version "pom.xml"')
-                    
+
                     cicdcli('maven build')
                     cicdcli("docker build ${name} ${version}")
                 }
@@ -71,9 +72,8 @@ pipeline {
             }
             steps {
                 cicdcli('maven publish')
-                sh('sudo -E docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASSWORD')
-                sh("sudo -E docker push \$DOCKER_HUB_REPO/${name}:${version}")
-                //TODO: publicar en Nexus, un build con docker, analizar con rivy y hadolint y un rico push
+                cicdcli("docker login")
+                cicdcli("docker push")
             }
         }
     }

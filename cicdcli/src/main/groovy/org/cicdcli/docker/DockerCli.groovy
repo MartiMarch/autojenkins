@@ -11,7 +11,9 @@ import picocli.CommandLine
     mixinStandardHelpOptions = true,
     subcommands = [
         Initialize,
-        Build
+        Build,
+        Login,
+        Push
     ]
 )
 class DockerCli implements Runnable {
@@ -58,6 +60,44 @@ class DockerCli implements Runnable {
         @Override
         void run() {
             Docker.build(appName, appVersion, dockerfilePath)
+        }
+    }
+
+    @CommandLine.Command(
+        name = "login",
+        mixinStandardHelpOptions = true,
+        description = "Used to login Docker Hub"
+    )
+    static class Login implements Runnable {
+
+        @Override
+        void run() {
+            Docker.login()
+        }
+    }
+
+    @CommandLine.Command(
+        name = "push",
+        mixinStandardHelpOptions = true,
+        description = "Used to push container"
+    )
+    static class Push implements Runnable {
+
+        @Parameters(
+            index = "0",
+            description = "Application name used to build container reference"
+        )
+        String appName
+
+        @Parameters(
+            index = "1",
+            description = "Application version used to build container reference"
+        )
+        String appVersion
+
+        @Override
+        void run() {
+            Docker.push(appName, appVersion)
         }
     }
 

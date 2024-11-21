@@ -2,7 +2,6 @@
 
 ```bash
 ./gradlew clean build
-# java -jar build/libs/untitled-1.0-SNAPSHOT-all.jar
 ./gradlew publish
 ```
 

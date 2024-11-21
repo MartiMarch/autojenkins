@@ -14,15 +14,33 @@ class Docker {
     }
 
     static void build(String appName, String appVersion, dockerfilePath = 'Dockerfile') {
+        String repo = DockerConf.getDockerHubRepository()
+
         ShellOutput so = Shell.exec(
             "sudo -E docker build"
             + " -f ${dockerfilePath}"
-            + " -t ${DockerConf.getDockerHubRepository()}/${appName}:${appVersion}"
+            + " -t ${repo}/${appName}:${appVersion}"
             + " --build-arg APP_NAME=${appName}"
             + " --build-arg APP_VERSION=${appVersion}"
             + " ."
         )
         Shell.checkShellError(so)
-        Logger.info(so.output)
+        Logger.info("Container ${appName}:${appVersion} bild!")
+    }
+
+    static void login() {
+        String user = DockerConf.getDockerHubUser()
+        String password = DockerConf.getDockerHubPassword()
+
+        ShellOutput so = Shell.exec("sudo -E docker login -u ${user} -p ${password}")
+        Shell.checkShellError(so)
+        Logger.info("Logged in to Docker Hub!")
+    }
+
+    static void push(String appName, String appVersion) {
+        String repo = DockerConf.getDockerHubRepository()
+
+        ShellOutput so = Shell.exec("sudo -E docker push ${repo}/${appName}:${appVersion}")
+        Shell.checkShellError(so)
     }
 }
