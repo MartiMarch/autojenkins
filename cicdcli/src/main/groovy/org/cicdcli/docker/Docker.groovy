@@ -25,7 +25,7 @@ class Docker {
             + " ."
         )
         Shell.checkShellError(so)
-        Logger.info("Container ${appName}:${appVersion} buld!")
+        Logger.info("Container ${appName}:${appVersion} build!")
     }
 
     static void login() {

@@ -71,9 +71,12 @@ pipeline {
                 expression { return isPushMaster() }
             }
             steps {
+                String name = cicdcli('maven name "pom.xml"')
+                String version = cicdcli('maven version "pom.xml"')
+
                 cicdcli('maven publish')
                 cicdcli("docker login")
-                cicdcli("docker push")
+                cicdcli("docker push '${name}' '${version}'")
             }
         }
     }
