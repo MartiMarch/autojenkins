@@ -39,9 +39,20 @@ class Maven {
         Logger.info(so.output)
     }
 
-    static void publish() {
-        String settingsPath = MavenConf.getSettingsPath()
-        ShellOutput so = Shell.exec("mvn -B deploy -s ${settingsPath} -DskipTests")
+    static void publish(String pomPath) {
+        String name = name(pomPath)
+        String group =group(pomPath)
+        String version = version(pomPath)
+        String jarPath = "target/${name}-${version}.jar"
+
+        ShellOutput so = Shell.exec(
+            "mvn deploy:deploy-file -s ${MavenConf.getSettingsPath()}"
+            + " -Dfile=${jarPath}"
+            + " -DgroupId=${group}"
+            + " -DartifactId=${name}"
+            + " -Dversion=${version}"
+            + " -Dpackaging=jar"
+        )
         Shell.checkShellError(so)
         Logger.info(so.output)
     }
@@ -52,6 +63,10 @@ class Maven {
 
     static String version(String pomPath) {
         return Xml.castXml(pomPath)?.version
+    }
+
+    static String group(String pomPath) {
+        return Xml.castXml(pomPath)?.groupId
     }
 
     static void updateVersion(String repositoryPath, String pomPath) {

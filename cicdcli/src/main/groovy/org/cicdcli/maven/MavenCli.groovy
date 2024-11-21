@@ -95,9 +95,15 @@ class MavenCli implements Runnable {
     )
     static class Publish implements Runnable {
 
+        @Parameters(
+            index = "0",
+            description = "pom.xml path"
+        )
+        String pomPath
+
         @Override
         void run() {
-            Maven.publish()
+            Maven.publish(pomPath)
         }
     }
 
