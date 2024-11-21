@@ -82,7 +82,7 @@ pipeline {
 
 String cicdcli(String command, boolean mustPrint = true){
     String output = sh(script: "sudo -E java -jar /opt/cache/cicdcli/cicdcli.jar ${command}", returnStdout: true)
-    if mustPrint == true:
+    if(mustPrint)
         println(output)
 
     return output
