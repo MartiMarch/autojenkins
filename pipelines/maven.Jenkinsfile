@@ -25,36 +25,31 @@ pipeline {
             }
         }
         stage('Lint') {
-            when {
-                expression { return isPR() }
-            }
+            when { expression { return isPR() } }
             steps {
                 cicdcli('maven lint')
+                // Meter el linter para Dockerfile de hadolint
             }
         }
         stage('Test') {
-            when {
-                expression { return isPR() }
-            }
+            when { expression { return isPR() } }
             steps {
                 cicdcli('maven test')
             }
         }
         /* Esta cosa es demasiado lenta...
         stage('Scan') {
-            when {
-                expression { return isPR() }
-            }
+            when { expression { return isPR() } }
             steps {
-                //cicdcli('maven owasp')
-                // Meter aquilo de trivy y hadolint
+                /* Esta cosa es demasiado lenta porque no he pagado :-(
+                 * cicdcli('maven owasp')
+                 */
+                //Meter aquilo de trivy
             }
         }
         */
         stage('Build') {
-            when {
-                expression { return isPushMaster() }
-            }
+            when { expression { return isPushMaster() } }
             steps {
                 script {
                     cicdcli('maven updateVersion "." "pom.xml"')
@@ -67,9 +62,7 @@ pipeline {
             }
         }
         stage('Publish') {
-            when {
-                expression { return isPushMaster() }
-            }
+            when { expression { return isPushMaster() } }
             steps {
                 script {
                     String name = cicdcli('maven name "pom.xml"')
@@ -78,6 +71,14 @@ pipeline {
                     cicdcli('maven publish "pom.xml"')
                     cicdcli("docker login")
                     cicdcli("docker push '${name}' '${version}'")
+                }
+            }
+        }
+        stage('Deploy') {
+            when { expression { return isPushMaster() } }
+            steps {
+                script {
+
                 }
             }
         }
