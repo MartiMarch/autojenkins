@@ -1,0 +1,763 @@
+jenkins:
+  nameOverride: autojenkins
+  fullnameOverride: autojenkins
+  namespaceOverride: autojenkins
+
+  clusterZone: "cluster.local"
+  kubernetesURL: "https://kubernetes.default"
+  credentialsId:
+
+  controller:
+    componentName: "jenkins-controller"
+    image:
+      registry: "docker.io"
+      repository: "jenkins/jenkins"
+      tag:
+      tagLabel: jdk17
+      pullPolicy: "Always"
+    imagePullSecretName:
+    lifecycle: {}
+    disableRememberMe: false
+    numExecutors: 0
+    executorMode: "NORMAL"
+    customJenkinsLabels: []
+    hostNetworking: false
+
+    admin:
+      username: "admin"
+      password: "1234"
+      userKey: jenkins-admin-user
+      passwordKey: jenkins-admin-password
+      createSecret: true
+      existingSecret: ""
+
+    jenkinsAdminEmail: austakiocaca@gmail.com
+    jenkinsHome: "/var/jenkins_home"
+    jenkinsRef: "/usr/share/jenkins/ref"
+    jenkinsWar: "/usr/share/jenkins/jenkins.war"
+    jenkinsOpts:
+    jenkinsUrlProtocol:
+    jenkinsUrl:
+    jenkinsUriPrefix:
+
+    resources:
+      requests:
+        cpu: "50m"
+        memory: "256Mi"
+      limits:
+        cpu: "2000m"
+        memory: "4096Mi"
+
+    shareProcessNamespace: false
+    enableServiceLinks: false
+    initContainerResources: {}
+    initContainerEnvFrom: []
+    initContainerEnv: []
+    containerEnvFrom: []
+    containerEnv: []
+
+    javaOpts:
+      -Dorg.apache.commons.jelly.tags.fmt.timeZone=Europe/Madrid
+
+    usePodSecurityContext: true
+    runAsUser: 1000
+    fsGroup: 1000
+    securityContextCapabilities: {}
+    podSecurityContextOverride: ~
+    containerSecurityContext:
+      runAsUser: 1000
+      runAsGroup: 1000
+      fsGroup: 1000
+      readOnlyRootFilesystem: true
+      allowPrivilegeEscalation: false
+
+    serviceType: ClusterIP
+    clusterIp:
+    servicePort: 8080
+    targetPort: 8080
+    nodePort:
+    serviceExternalTrafficPolicy:
+    serviceAnnotations: {}
+    statefulSetLabels: {}
+    serviceLabels: {}
+    podLabels: {}
+    healthProbes: true
+    probes:
+      startupProbe:
+        failureThreshold: 12
+        httpGet:
+          path: '{{ default "" .Values.controller.jenkinsUriPrefix }}/login'
+          port: http
+        periodSeconds: 10
+        timeoutSeconds: 5
+      livenessProbe:
+        failureThreshold: 5
+        httpGet:
+          path: '{{ default "" .Values.controller.jenkinsUriPrefix }}/login'
+          port: http
+        periodSeconds: 10
+        timeoutSeconds: 5
+        initialDelaySeconds:
+      readinessProbe:
+        failureThreshold: 3
+        httpGet:
+          path: '{{ default "" .Values.controller.jenkinsUriPrefix }}/login'
+          port: http
+        periodSeconds: 10
+        timeoutSeconds: 5
+        initialDelaySeconds:
+    podDisruptionBudget:
+      enabled: false
+      apiVersion: "policy/v1beta1"
+      annotations: {}
+      labels: {}
+      maxUnavailable: "0"
+    agentListenerEnabled: true
+    agentListenerPort: 50000
+    agentListenerHostPort:
+    agentListenerNodePort:
+    agentListenerExternalTrafficPolicy:
+    agentListenerLoadBalancerSourceRanges:
+    - 0.0.0.0/0
+    disabledAgentProtocols:
+      - JNLP-connect
+      - JNLP2-connect
+    csrf:
+      defaultCrumbIssuer:
+        enabled: true
+        proxyCompatability: true
+    agentListenerServiceType: "ClusterIP"
+    agentListenerServiceAnnotations: {}
+    agentListenerLoadBalancerIP:
+    legacyRemotingSecurityEnabled: false
+    loadBalancerSourceRanges:
+    - 0.0.0.0/0
+    loadBalancerIP:
+    extraPorts:
+
+    installPlugins:
+      - kubernetes:4292.v11898cf8fa_66
+      - workflow-aggregator:600.vb_57cdd26fdd7
+      - git:5.5.2
+      - remote-file:1.24
+      - configuration-as-code:1850.va_a_8c31d3158b_
+      - ansicolor:1.0.5
+      - parameterized-trigger:806.vf6fff3e28c3e
+      - rebuild:332.va_1ee476d8f6d
+      - pipeline-groovy-lib:740.va_2701257fe8d
+      - github:1.40.0
+      - gitea:220.v4618c82a_40fb_
+      - build-pipeline-plugin:2.0.2
+      - blueocean:1.27.16
+      - pipeline-stage-view:2.34
+
+    installLatestPlugins: true
+    installLatestSpecifiedPlugins: false
+    additionalPlugins: []
+    initializeOnce: false
+    overwritePlugins: false
+    overwritePluginsFromImage: true
+    projectNamingStrategy: standard
+    enableRawHtmlMarkupFormatter: false
+    markupFormatter: plainText
+    scriptApproval: []
+    initScripts: {}
+    initConfigMap:
+    existingSecret:
+    additionalExistingSecrets: []
+    additionalSecrets: []
+    secretClaims: []
+    cloudName: "kubernetes"
+
+    JCasC:
+      defaultConfig: true
+      #defaultConfig: true
+      overwriteConfiguration: false
+      configUrls: []
+      #configUrls: ['https://raw.githubusercontent.com/MartiMarch/autojenkins/refs/heads/feat/helm_chart/jcasc/config.yaml']
+      configScripts: {}
+      security:
+        apiToken:
+          creationOfLegacyTokenEnabled: false
+          tokenGenerationOnCreationEnabled: false
+          usageStatisticsEnabled: true
+      securityRealm: |-
+        local:
+          allowsSignup: false
+          enableCaptcha: false
+          users:
+          - id: "${chart-admin-username}"
+            name: "Jenkins Admin"
+            password: "${chart-admin-password}"
+      authorizationStrategy: |-
+        loggedInUsersCanDoAnything:
+          allowAnonymousRead: false
+      configMapAnnotations: {}
+
+    customInitContainers: []
+    sidecars:
+      configAutoReload:
+        enabled: true
+        image:
+          registry: docker.io
+          repository: kiwigrid/k8s-sidecar
+          tag: 1.28.0
+        imagePullPolicy: IfNotPresent
+        resources: {}
+        additionalVolumeMounts: []
+        logging:
+          configuration:
+            override: false
+            logLevel: INFO
+            formatter: JSON
+            logToConsole: true
+            logToFile: false
+            maxBytes: 1024
+            backupCount: 3
+        scheme: http
+        skipTlsVerify: false
+        reqRetryConnect: 10
+        sleepTime:
+        envFrom: []
+        env: {}
+        sshTcpPort: 1044
+        folder: "/var/jenkins_home/casc_configs"
+        containerSecurityContext:
+          runAsUser: 1000
+          runAsGroup: 1000
+          fsGroup: 1000
+          readOnlyRootFilesystem: true
+          allowPrivilegeEscalation: false
+      additionalSidecarContainers: []
+    schedulerName: ""
+    nodeSelector: {}
+    tolerations: []
+    terminationGracePeriodSeconds:
+    terminationMessagePath:
+    terminationMessagePolicy:
+    affinity: {}
+    priorityClassName:
+    podAnnotations: {}
+    statefulSetAnnotations: {}
+    updateStrategy: {}
+    topologySpreadConstraints: {}
+    ingress:
+      enabled: false
+      paths: []
+      apiVersion: "extensions/v1beta1"
+      labels: {}
+      annotations: {}
+      path:
+      hostName:
+      resourceRootUrl:
+      tls: []
+    secondaryingress:
+      enabled: false
+      paths: []
+      apiVersion: "extensions/v1beta1"
+      labels: {}
+      annotations: {}
+      hostName:
+      tls:
+    backendconfig:
+      enabled: false
+      apiVersion: "extensions/v1beta1"
+      name:
+      labels: {}
+      annotations: {}
+      spec: {}
+    route:
+      enabled: false
+      labels: {}
+      annotations: {}
+      path:
+    hostAliases: []
+    prometheus:
+      enabled: false
+      serviceMonitorAdditionalLabels: {}
+      serviceMonitorNamespace:
+      scrapeInterval: 60s
+      scrapeEndpoint: /prometheus
+      alertingrules: []
+      alertingRulesAdditionalLabels: {}
+      prometheusRuleNamespace: ""
+      relabelings: []
+      metricRelabelings: []
+    googlePodMonitor:
+      enabled: false
+      scrapeInterval: 60s
+      scrapeEndpoint: /prometheus
+    testEnabled: true
+    httpsKeyStore:
+      enable: false
+      jenkinsHttpsJksSecretName: ""
+      jenkinsHttpsJksSecretKey: "jenkins-jks-file"
+      jenkinsHttpsJksPasswordSecretName: ""
+      jenkinsHttpsJksPasswordSecretKey: "https-jks-password"
+      disableSecretMount: false
+      httpPort: 8081
+      path: "/var/jenkins_keystore"
+      fileName: "keystore.jks"
+      password: "password"
+      jenkinsKeyStoreBase64Encoded:
+
+  agent:
+    enabled: true
+    defaultsProviderTemplate: "generic-agent"
+    useDefaultServiceAccount: true
+    serviceAccount:
+    jenkinsUrl:
+    jenkinsTunnel:
+    skipTlsVerify: true
+    usageRestricted: false
+    kubernetesConnectTimeout: 5
+    kubernetesReadTimeout: 15
+    maxRequestsPerHostStr: "32"
+    retentionTimeout: 5
+    waitForPodSec: 600
+    namespace: autojenkins
+    podLabels: {}
+    jnlpregistry:
+    image:
+      repository: "jenkins/inbound-agent"
+      tag: "3261.v9c670a_4748a_9-1"
+    workingDir: "/home/jenkins/agent"
+    nodeUsageMode: "NORMAL"
+    customJenkinsLabels: []
+    imagePullSecretName:
+    componentName: "jenkins-agent"
+    websocket: false
+    directConnection: false
+    privileged: false
+    runAsUser:
+    runAsGroup:
+    hostNetworking: false
+    resources:
+      requests:
+        cpu: "50m"
+        memory: "224Mi"
+      limits:
+        cpu: "1000m"
+        memory: "1024Mi"
+    livenessProbe: {}
+    alwaysPullImage: true
+    restrictedPssSecurityContext: false
+    podRetention: "Never"
+    showRawYaml: true
+    volumes: []
+    workspaceVolume: {}
+    envVars: []
+    secretEnvVars: []
+    nodeSelector: {}
+    command:
+    args: "${computer.jnlpmac} ${computer.name}"
+    sideContainerName: "jnlp"
+    TTYEnabled: false
+    containerCap: 10
+    podName: "generic-agent"
+    garbageCollection:
+      enabled: false
+      namespaces: ""
+      timeout: 300
+    idleMinutes: 0
+    yamlTemplate: |-
+      apiVersion: v1
+      kind: Pod
+      metadata:
+        name: generic-agent
+        namespace: autojenkins
+      spec:
+        containers:
+          - name: generic-agent
+            image: srmmll/generic-agent:0.0.0
+            imagePullPolicy: Always
+            command: ["bash", "-c"]
+            args: ["sleep 999999"]
+            env:
+              - name: CLEAR_CACHE_PATHS
+                value: "true"
+              - name: CICDCLI_MAVEN_SETTINGS_PATH
+                value: "/opt/settings.xml"
+              - name: CICDCLI_DOCKERHUB_REPOSITORY
+                value: "srmmll"
+              - name: CICDCLI_DOCKERHUB_USER
+                valueFrom:
+                  secretKeyRef:
+                    name: dockerhub
+                    key: user
+              - name: CICDCLI_DOCKERHUB_PASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    name: dockerhub
+                    key: password
+            volumeMounts:
+              - name: agent-cache
+                mountPath: /opt
+              - mountPath: /var/run/docker.sock
+                name: docker-sock
+              - name: nexus-mvn-settings
+                mountPath: /opt/settings.xml
+                subPath: settings.xml
+            resources:
+              requests:
+                memory: "64Mi"
+                cpu: "50m"
+              limits:
+                memory: "2000Mi"
+                cpu: "1000m"
+        volumes:
+          - name: nexus-mvn-settings
+            configMap:
+              name: nexus-mvn-settings
+          - name: agent-cache
+            persistentVolumeClaim:
+              claimName: autojenkins-agent-cache
+          - name: docker-sock
+            hostPath:
+              path: /var/run/docker.sock
+    yamlMergeStrategy: "merge"
+    inheritYamlMergeStrategy: false
+    connectTimeout: 100
+    annotations: {}
+    additionalContainers: []
+    disableDefaultAgent: false
+    podTemplates: {}
+  additionalAgents: {}
+  additionalClouds: {}
+  persistence:
+    enabled: true
+    existingClaim:
+    storageClass:
+    annotations: {}
+    labels: {}
+    accessMode: "ReadWriteOnce"
+    size: "8Gi"
+    dataSource: {}
+    subPath:
+    volumes: []
+    mounts: []
+  networkPolicy:
+    enabled: false
+    apiVersion: networking.k8s.io/v1
+    internalAgents:
+      allowed: true
+      podLabels: {}
+      namespaceLabels: {}
+    externalAgents:
+      ipCIDR:
+      except: []
+  rbac:
+    create: true
+    readSecrets: false
+    useOpenShiftNonRootSCC: false
+  serviceAccount:
+    create: true
+    name:
+    annotations: {}
+    extraLabels: {}
+    imagePullSecretName:
+  serviceAccountAgent:
+    create: false
+    name:
+    annotations: {}
+    extraLabels: {}
+    imagePullSecretName:
+  checkDeprecation: true
+  awsSecurityGroupPolicies:
+    enabled: false
+    policies:
+      - name: ""
+        securityGroupIds: []
+        podSelector: {}
+
+  renderHelmLabels: true
+  helmtest:
+    bats:
+      image:
+        registry: "docker.io"
+        repository: "bats/bats"
+        tag: "1.11.0"
+
+gitea:
+  global:
+    imageRegistry: ""
+    imagePullSecrets: []
+    storageClass: ""
+    hostAliases: []
+  namespace: "autojenkins"
+  replicaCount: 1
+  strategy:
+    type: "RollingUpdate"
+    rollingUpdate:
+      maxSurge: "100%"
+      maxUnavailable: 0
+  clusterDomain: cluster.local
+  image:
+    registry: ""
+    repository: gitea/gitea
+    tag: "1.22.3"
+    digest: ""
+    pullPolicy: IfNotPresent
+    rootless: true
+    fullOverride: ""
+  imagePullSecrets: []
+  podSecurityContext:
+    fsGroup: 1000
+  containerSecurityContext:
+    runAsUser: 1000
+    runAsGroup: 1000
+    fsGroup: 1000
+  securityContext: {}
+  podDisruptionBudget: {}
+  service:
+    http:
+      type: ClusterIP
+      port: 3000
+      clusterIP: None
+      loadBalancerIP:
+      nodePort:
+      externalTrafficPolicy:
+      externalIPs:
+      ipFamilyPolicy:
+      ipFamilies:
+      loadBalancerSourceRanges: []
+      annotations: {}
+      labels: {}
+      loadBalancerClass:
+    ssh:
+      type: ClusterIP
+      port: 22
+      clusterIP: None
+      loadBalancerIP:
+      nodePort:
+      externalTrafficPolicy:
+      externalIPs:
+      ipFamilyPolicy:
+      ipFamilies:
+      hostPort:
+      loadBalancerSourceRanges: []
+      annotations: {}
+      labels: {}
+      loadBalancerClass:
+  ingress:
+    enabled: false
+    className:
+    annotations:
+      {}
+    hosts:
+      - host: git.example.com
+        paths:
+          - path: /
+            pathType: Prefix
+    tls: []
+  resources:
+    limits:
+      cpu: 1000m
+      memory: 1280Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+  schedulerName: ""
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  topologySpreadConstraints: []
+  dnsConfig: {}
+  priorityClassName: ""
+  deployment:
+    env:
+      []
+    terminationGracePeriodSeconds: 60
+    labels: {}
+    annotations: {}
+  serviceAccount:
+    create: false
+    name: ""
+    automountServiceAccountToken: false
+    imagePullSecrets: []
+    annotations: {}
+    labels: {}
+  persistence:
+    enabled: true
+    create: true
+    mount: true
+    claimName: gitea-shared-storage
+    size: 10Gi
+    accessModes:
+      - ReadWriteOnce
+    labels: {}
+    storageClass:
+    subPath:
+    volumeName: ""
+    annotations:
+      helm.sh/resource-policy: keep
+  extraContainers: []
+  extraVolumes: []
+  extraContainerVolumeMounts: []
+  extraInitVolumeMounts: []
+  extraVolumeMounts: []
+  initPreScript: ""
+  initContainers:
+    resources:
+      limits: {}
+      requests:
+        cpu: 100m
+        memory: 128Mi
+  signing:
+    enabled: false
+    gpgHome: /data/git/.gnupg
+    privateKey: ""
+    existingSecret: ""
+  gitea:
+    admin:
+      existingSecret:
+      username: "gitea"
+      password: "12345678"
+      email: "fake@domain.com"
+      passwordMode: keepUpdated
+    metrics:
+      enabled: false
+      serviceMonitor:
+        enabled: false
+        interval: ""
+        relabelings: []
+        scheme: ""
+        scrapeTimeout: ""
+        tlsConfig: {}
+    ldap:
+      []
+    oauth:
+      []
+    config:
+      log:
+        LEVEL: "Trace"
+      server:
+        SSH_PORT: 22
+        SSH_LISTEN_PORT: 2222
+      database:
+        # https://docs.gitea.com/administration/config-cheat-sheet#database-database
+        HOST: autojenkins-postgresql.autojenkins.svc.cluster.local
+      webhook:
+        # https://mike42.me/blog/2019-05-how-to-integrate-gitea-and-jenkins
+        # https://docs.gitea.com/administration/config-cheat-sheet
+        #####################
+        # Ejemplo de enlaces declarados en ls configuración de Jenkins:
+        #  > http://autojenkins-gitea-http.autojenkins.svc.cluster.local:3000
+        #
+        # Ejemplo de Webhook declarado a nivel de repositorio en Jenkins (Todos los eventos)
+        #  > http://autojenkins.autojenkins.svc.cluster.local:8080/gitea-webhook/post
+        #
+        # PD: recuerda configurar bien la PR
+        #######
+        SKIP_TLS_VERIFY: true
+        ALLOWED_HOST_LIST: "private,autojenkins.autojenkins.svc.cluster.local,*"
+    additionalConfigSources: []
+    additionalConfigFromEnvs: []
+    podAnnotations: {}
+    ssh:
+      logLevel: "INFO"
+    livenessProbe:
+      enabled: true
+      tcpSocket:
+        port: http
+      initialDelaySeconds: 200
+      timeoutSeconds: 1
+      periodSeconds: 10
+      successThreshold: 1
+      failureThreshold: 10
+    readinessProbe:
+      enabled: true
+      tcpSocket:
+        port: http
+      initialDelaySeconds: 5
+      timeoutSeconds: 1
+      periodSeconds: 10
+      successThreshold: 1
+      failureThreshold: 3
+    startupProbe:
+      enabled: false
+      tcpSocket:
+        port: http
+      initialDelaySeconds: 60
+      timeoutSeconds: 1
+      periodSeconds: 10
+      successThreshold: 1
+      failureThreshold: 10
+  redis-cluster:
+    enabled: false
+    usePassword: false
+    cluster:
+      nodes: 3
+      replicas: 0
+  redis:
+    enabled: false
+    architecture: standalone
+    global:
+      redis:
+        password: changeme
+    master:
+      count: 1
+  postgresql-ha:
+    global:
+      postgresql:
+        database: gitea
+        password: gitea
+        username: gitea
+    enabled: false
+    postgresql:
+      repmgrPassword: changeme2
+      postgresPassword: changeme1
+      password: changeme4
+    pgpool:
+      adminPassword: changeme3
+    service:
+      ports:
+        postgresql: 5432
+    persistence:
+      size: 10Gi
+  postgresql:
+    enabled: true
+    global:
+      postgresql:
+        auth:
+          password: gitea
+          database: gitea
+          username: gitea
+        service:
+          ports:
+            postgresql: 5432
+    primary:
+      persistence:
+        size: 10Gi
+  checkDeprecation: true
+  test:
+    enabled: true
+    image:
+      name: busybox
+      tag: latest
+  extraDeploy: []
+
+nexus:
+  statefulset:
+    enabled: true
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "100Mi"
+    limits:
+      cpu: "2000m"
+      memory: "4000Mi"
+  
+sonar:
+  namespace: autojenkins
+
+dockerhub:
+  user: srmmll
+  password: dckr_pat_ex6QJc1kwWb9itJjy7KsXmAq9E4
+
+###################
+# Si falla el port.forward, meterse en el pod y cambiar permisos de archivos en este path:
+# /data/git/gitea-repositories
+#
+# También mirar los recursos
+###################

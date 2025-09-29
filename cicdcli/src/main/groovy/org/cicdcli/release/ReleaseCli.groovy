@@ -1,0 +1,159 @@
+package org.cicdcli.release
+
+import picocli.CommandLine.Parameters
+import picocli.CommandLine
+
+
+@CommandLine.Command(
+    name = "release",
+    description = "Used to manage release",
+    mixinStandardHelpOptions = true,
+    subcommands = [
+        CurrentVersion,
+        NextVersion,
+        Target,
+        Source,
+        Name,
+        IsMasterToMaster,
+        IsMasterPR
+    ]
+)
+class ReleaseCli implements Runnable {
+
+    @CommandLine.Command(
+        name = "currentVersion",
+        mixinStandardHelpOptions = true,
+        description = "Used to obtain current version using tags"
+    )
+    static class CurrentVersion implements Runnable {
+
+        @Parameters(
+            index = "0",
+            description = "Git repository path"
+        )
+        String repositoryPath
+
+        @Override
+        void run() {
+            print(Release.currentVersion(repositoryPath))
+        }
+    }
+
+    @CommandLine.Command(
+        name = "nextVersion",
+        mixinStandardHelpOptions = true,
+        description = "Return next version using commit messages"
+    )
+    static class NextVersion implements Runnable {
+
+        @Parameters(
+            index = "0",
+            description = "Git repository path"
+        )
+        String repositoryPath
+
+        @Override
+        void run() {
+            print(Release.nextVersion(repositoryPath, Release.currentVersion(repositoryPath)))
+        }
+    }
+
+    @CommandLine.Command(
+        name = "name",
+        mixinStandardHelpOptions = true,
+        description = "Return project name"
+    )
+    static class Name implements Runnable {
+
+        @Parameters(
+            index = "0",
+            description = "Git repository path"
+        )
+        String repositoryPath
+
+        @Override
+        void run() {
+            print(Release.name(repositoryPath))
+        }
+    }
+
+    @CommandLine.Command(
+        name = "target",
+        mixinStandardHelpOptions = true,
+        description = "Used to known git target"
+    )
+    static class Target implements Runnable {
+
+        @Parameters(
+            index = "0",
+            description = "Git repository path"
+        )
+        String repositoryPath
+
+        @Override
+        void run(){
+            print(Release.target(repositoryPath))
+        }
+    }
+
+    @CommandLine.Command(
+        name = "source",
+        mixinStandardHelpOptions = true,
+        description = "Used to known git source"
+    )
+    static class Source implements Runnable {
+
+        @Parameters(
+            index = "0",
+            description = "Git repository path"
+        )
+        String repositoryPath
+
+        @Override
+        void run(){
+            print(Release.source(repositoryPath))
+        }
+    }
+
+    @CommandLine.Command(
+        name = "isMasterToMaster",
+        mixinStandardHelpOptions = true,
+        description = "Used to check if a push os from master to master"
+    )
+    static class IsMasterToMaster implements Runnable {
+
+        @Parameters(
+            index = "0",
+            description = "Git repository path"
+        )
+        String repositoryPath
+
+        @Override
+        void run(){
+            print(Boolean.toString(Release.isMasterToMaster(repositoryPath)))
+        }
+    }
+
+    @CommandLine.Command(
+        name = "isMasterPR",
+        mixinStandardHelpOptions = true,
+        description = "Used to check if a push os from master to master"
+    )
+    static class IsMasterPR implements Runnable {
+
+        @Parameters(
+                index = "0",
+                description = "Git repository path"
+        )
+        String repositoryPath
+
+        @Override
+        void run(){
+            print(Boolean.toString(Release.isMasterPR(repositoryPath)))
+        }
+    }
+
+    @Override
+    void run(){}
+
+}

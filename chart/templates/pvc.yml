@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: autojenkins-agent-cache
+spec:
+  accessModes:
+    - ReadWriteOnce # Si el ClassStorage lo permite usar ReadWriteMany
+  resources:
+    requests:
+      storage: 15Gi
+  storageClassName: standard

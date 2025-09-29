@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: "{{ .Values.app.name }}-clusterip"
+  namespace: {{ .Values.app.namespace }}
+  labels:
+    app: {{ .Values.app.name }}
+spec:
+  type: ClusterIP
+  ports:
+    {{- range .Values.app.clsuterip }}
+    - name: {{ .name }}
+      protocol: {{ .protocol | default "TCP" }}
+      port: {{ .port }}
+      targetPort: {{ .targetPort | default .port }}
+    {{- end }}
+  selector:
+    app: {{ .Values.app.name }}

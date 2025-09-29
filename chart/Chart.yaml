@@ -1,0 +1,19 @@
+apiVersion: v2
+name: autojenkins
+description: Auto Jenkins manager
+type: application
+version: 0.0.0
+appVersion: "1.16.0"
+dependencies:
+  - name: jenkins
+    version: 5.7.5
+    repository: https://charts.jenkins.io
+  - name: nexus
+    version: 1.2.4
+    repository: https://curie-data-factory.github.io/helm-charts/
+  - name: gitea
+    version: 10.5.0
+    repository: https://dl.gitea.com/charts/
+#  - name: sonarqube
+#    repository: https://SonarSource.github.io/helm-chart-sonarqube
+#    version: 10.7.0+3598

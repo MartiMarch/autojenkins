@@ -1,0 +1,30 @@
+app:
+  name: cicd-test
+  namespace: cicd
+  replicas: 1
+  image:
+    name: srmmll/back-api-slack-connector
+    tag: 0.1.1
+    pullPolicy: Always
+  command:
+    - /bin/sh
+    - -c
+  args:
+    - java -jar $APP_NAME-$APP_VERSION.jar
+  env:
+    - name: APP_NAME
+      value: back-api-slack-connector
+    - name: APP_VERSION
+      value: 0.1.1
+  port: 8080
+  clsuterip:
+    - name: http
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+
+mongodb:
+  name: back-api-slack-connector-mongo
+  version: 6.0
+  user: mongo
+  password: 1234

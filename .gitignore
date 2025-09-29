@@ -7,6 +7,9 @@
 *.dll
 *.so
 *.dylib
+*.tz
+*.tar
+*.zip
 
 # Test binary, built with `go test -c`
 *.test
@@ -23,3 +26,6 @@ go.work.sum
 
 # env file
 .env
+
+.gradle
+build

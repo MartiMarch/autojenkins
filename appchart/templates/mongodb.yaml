@@ -1,0 +1,28 @@
+{{- if .Values.mongodb }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.mongodb.name }}
+  namespace: {{ .Values.app.namespace }}
+  labels:
+    app-name: {{ .Values.mongodb.name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app-name: {{ .Values.mongodb.name }}
+  template:
+    metadata:
+      labels:
+        app-name: {{ .Values.mongodb.name }}
+    spec:
+      containers:
+      - name: {{ .Values.mongodb.name }}
+        image: "mongo:{{ .Values.mongodb.version }}"
+        imagePullPolicy: Always
+        env:
+          - name: MONGO_INITDB_ROOT_USERNAME
+            value: "{{ .Values.mongodb.user }}"
+          - name: MONGO_INITDB_ROOT_PASSWORD
+            value: "{{ .Values.mongodb.password }}"
+{{- end }}
